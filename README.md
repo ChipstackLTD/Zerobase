@@ -22,6 +22,6 @@ Please visit [wiki page](https://zerobase.chipstack.vn) for documentation, quick
 ## Submit bugs
 
 If you have any questions, you could contact us through the email "*support@chipstack.vn*".
-Or you could [file an issue on GitHub](https://github.com/openwch/arduino_core_ch32/issues/new).
+Or you could [file an issue on GitHub](https://github.com/ChipstackLTD/Zerobase/issues/new).
 
 
