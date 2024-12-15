@@ -12,6 +12,112 @@ menu.dbg=Debug symbols and core logs
 menu.rtlib=C Runtime Library
 menu.upload_method=Upload method
 
+##############################################################################
+##ZEROBASE Board   
+
+ZEROBASE.name=Zerobase
+ZEROBASE.build.core=arduino
+ZEROBASE.build.board=ZEROBASE
+ZEROBASE.upload.maximum_size=0
+ZEROBASE.upload.maximum_data_size=0
+ZEROBASE.build.variant_h=variant_{build.board}.h
+ZEROBASE.debug.tool=gdb-WCH_LinkE
+
+
+#ZEROBASE Board
+ZEROBASE.menu.pnum.CH32V003F4=Zerobase
+ZEROBASE.menu.pnum.CH32V003F4.node=NODE_V003F4
+ZEROBASE.menu.pnum.CH32V003F4.upload.maximum_size=16384
+ZEROBASE.menu.pnum.CH32V003F4.upload.maximum_data_size=2048
+ZEROBASE.menu.pnum.CH32V003F4.build.mcu=QingKe-V2A
+ZEROBASE.menu.pnum.CH32V003F4.build.board=CH32V003F4
+ZEROBASE.menu.pnum.CH32V003F4.build.series=CH32V00x
+ZEROBASE.menu.pnum.CH32V003F4.build.variant=CH32V00x/CH32V003F4
+ZEROBASE.menu.pnum.CH32V003F4.build.chip=CH32V003F4
+ZEROBASE.menu.pnum.CH32V003F4.build.march=rv32ecxw
+ZEROBASE.menu.pnum.CH32V003F4.build.mabi=ilp32e
+ZEROBASE.menu.pnum.CH32V003F4.build.math_lib_gcc=-lm
+ZEROBASE.menu.pnum.CH32V003F4.build.IQ_math_RV32=
+ZEROBASE.menu.pnum.CH32V003F4.build.ch_extra_lib=-lprintf
+
+
+# Upload menu
+ZEROBASE.menu.upload_method.minichlink=minichlink
+ZEROBASE.menu.upload_method.minichlink.upload.protocol=
+ZEROBASE.menu.upload_method.minichlink.upload.options=
+ZEROBASE.menu.upload_method.minichlink.upload.tool=minichlink
+#ZEROBASE.menu.upload_method.swdMethod=WCH-SWD
+#ZEROBASE.menu.upload_method.swdMethod.upload.protocol=
+#ZEROBASE.menu.upload_method.swdMethod.upload.options=
+#ZEROBASE.menu.upload_method.swdMethod.upload.tool=WCH_linkE
+#ZEROBASE.menu.upload_method.ispMethod=WCH-ISP
+#ZEROBASE.menu.upload_method.ispMethod.upload.protocol=
+#ZEROBASE.menu.upload_method.ispMethod.upload.options=
+#ZEROBASE.menu.upload_method.ispMethod.upload.tool=wchisp
+
+
+# Clock Select
+ZEROBASE.menu.clock.48MHz_HSI=48MHz Internal
+ZEROBASE.menu.clock.48MHz_HSI.build.flags.clock=-DSYSCLK_FREQ_48MHz_HSI=48000000 -DF_CPU=48000000
+ZEROBASE.menu.clock.24MHz_HSI=24MHz Internal
+ZEROBASE.menu.clock.24MHz_HSI.build.flags.clock=-DSYSCLK_FREQ_24MHz_HSI=24000000 -DF_CPU=24000000
+ZEROBASE.menu.clock.8MHz_HSI=8MHz Internal
+ZEROBASE.menu.clock.8MHz_HSI.build.flags.clock=-DSYSCLK_FREQ_8MHz_HSI=8000000 -DF_CPU=8000000
+ZEROBASE.menu.clock.48MHz_HSE=48MHz External
+ZEROBASE.menu.clock.48MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_48MHz_HSE=48000000 -DF_CPU=48000000
+ZEROBASE.menu.clock.24MHz_HSE=24MHz External
+ZEROBASE.menu.clock.24MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_24MHz_HSE=24000000 -DF_CPU=24000000
+ZEROBASE.menu.clock.8MHz_HSE=8MHz External
+ZEROBASE.menu.clock.8MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_8MHz_HSE=8000000 -DF_CPU=8000000
+
+
+# Optimizations
+ZEROBASE.menu.opt.osstd=Smallest (-Os default)
+ZEROBASE.menu.opt.osstd.build.flags.optimize=-Os
+ZEROBASE.menu.opt.oslto=Smallest (-Os) with LTO
+ZEROBASE.menu.opt.oslto.build.flags.optimize=-Os -flto
+ZEROBASE.menu.opt.o1std=Fast (-O1)
+ZEROBASE.menu.opt.o1std.build.flags.optimize=-O1
+ZEROBASE.menu.opt.o1lto=Fast (-O1) with LTO
+ZEROBASE.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+ZEROBASE.menu.opt.o2std=Faster (-O2)
+ZEROBASE.menu.opt.o2std.build.flags.optimize=-O2
+ZEROBASE.menu.opt.o2lto=Faster (-O2) with LTO
+ZEROBASE.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+ZEROBASE.menu.opt.o3std=Fastest (-O3)
+ZEROBASE.menu.opt.o3std.build.flags.optimize=-O3
+ZEROBASE.menu.opt.o3lto=Fastest (-O3) with LTO
+ZEROBASE.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+ZEROBASE.menu.opt.ogstd=Debug (-Og)
+ZEROBASE.menu.opt.ogstd.build.flags.optimize=-Og
+ZEROBASE.menu.opt.o0std=No Optimization (-O0)
+ZEROBASE.menu.opt.o0std.build.flags.optimize=-O0
+
+
+# Debug information
+ZEROBASE.menu.dbg.none=None
+ZEROBASE.menu.dbg.none.build.flags.debug=-DNDEBUG
+ZEROBASE.menu.dbg.enable_sym=Symbols Enabled (-g)
+ZEROBASE.menu.dbg.enable_sym.build.flags.debug=-g -DNDEBUG
+ZEROBASE.menu.dbg.enable_log=Core logs Enabled
+ZEROBASE.menu.dbg.enable_log.build.flags.debug=
+ZEROBASE.menu.dbg.enable_all=Core Logs and Symbols Enabled (-g)
+ZEROBASE.menu.dbg.enable_all.build.flags.debug=-g
+
+
+# C Runtime Library
+ZEROBASE.menu.rtlib.nano=Newlib Nano (default)
+ZEROBASE.menu.rtlib.nano.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs
+ZEROBASE.menu.rtlib.nanofp=Newlib Nano + Float Printf
+ZEROBASE.menu.rtlib.nanofp.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _printf_float
+ZEROBASE.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+ZEROBASE.menu.rtlib.nanofs.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _scanf_float
+ZEROBASE.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+ZEROBASE.menu.rtlib.nanofps.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _printf_float -u _scanf_float
+ZEROBASE.menu.rtlib.full=Newlib Standard
+ZEROBASE.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
+
+
 
 
 ##############################################################################

@@ -20,6 +20,9 @@
 #define                         TIM_MODULE_ENABLED
 
 /* CH32V003F4 Pins */
+
+
+
 #define PA1                     PIN_A1
 #define PA2                     PIN_A0
 #define PC0                     2
@@ -52,14 +55,14 @@
 
 
 
-// On-board LED pin number
+// On-board LED pin number (D2)
 #ifndef LED_BUILTIN
   #define LED_BUILTIN           PNUM_NOT_DEFINED
 #endif
 
 
 
-// On-board user button
+// On-board user button (D3)
 #ifndef USER_BTN
   #define USER_BTN              PNUM_NOT_DEFINED
 #endif
@@ -74,16 +77,16 @@
 // Default pin used for generic 'Serial' instance
 // Mandatory for Firmata
 #ifndef PIN_SERIAL_RX
-  #define PIN_SERIAL_RX         PD6
+  #define PIN_SERIAL_RX         PD1
 #endif
 #ifndef PIN_SERIAL_TX
-  #define PIN_SERIAL_TX         PD5
+  #define PIN_SERIAL_TX         PD0
 #endif
 
 
 // SPI definitions
 #ifndef PIN_SPI_SS
-  #define PIN_SPI_SS            PC4
+  #define PIN_SPI_SS            PC0
 #endif
 #ifndef PIN_SPI_MOSI
   #define PIN_SPI_MOSI          PC6
