@@ -1,117 +1,27 @@
-# Arduino core support for CH32 EVT Boards
+![Zerobase logo](https://github.com/user-attachments/assets/0156d473-fe2a-45c6-868e-c79207c5b502)
+# Zerobase Arduino core
 
-* [Introduction](https://github.com/openwch/arduino_core_ch32#Introduction)<br>
-* [How to use](https://github.com/openwch/arduino_core_ch32#How-to-use)<br>
-* [Supported boards](https://github.com/openwch/arduino_core_ch32#Supported-boards)<br>
-* [OS support](https://github.com/openwch/arduino_core_ch32#OS-support)<br>
-* [Submit bugs](https://github.com/openwch/arduino_core_ch32#Submit-bugs)<br>
+## What is Zerobase
 
-## Introduction
+**Zerobase** is an innovative microcontroller board developed by **Chipstack Co., Ltd.**, designed to bring affordable yet powerful technology to the maker community. Inspired by the Arduino Nano, Zerobase offers enhanced performance, improved capabilities, and a price point that makes it the perfect entry-level choice for Arduino enthusiasts and learners on a budget.
 
-This repo adds the support of CH32 MCU in Arduino IDE.<br>
+Key Features of Zerobase:
 
-The file includes:
-* [Arduino_Core_CH32](https://github.com/openwch/arduino_core_ch32):Public library files.
-* [openocd](https://github.com/openwch/openocd_wch):can directly use WCH-LINKE to download and debug wch chips.
-* [riscv-none-embed-gcc](https://github.com/openwch/risc-none-embed-gcc):A toolchain that supports WCH custom half word and byte compression instruction extensions and hardware stack push/pop functions.
+**Affordable Excellence**: Powered by microcontroller **CH32V003**, Zerobase delivers top-notch features at the **lowest possible cost** to democratize access to technology.
 
-## How to use
+**Enhanced Performance**: Faster processing power, expanded memory, and better I/O options compared to traditional Arduino Nano boards.
 
-You can add this software package directly on the IDE through the [Arduino Boards Manager](https://www.arduino.cc/en/guide/cores).
+**Beginner-Friendly**: Preloaded libraries, extensive online documentation, and compatibility with Arduino IDE make it easy for anyone to start their maker journey.
 
-Add the following link in the "*Additional Boards Managers URLs*" field:
+**Seamless Compatibility**: Works effortlessly with existing Arduino projects, shields, and accessories. We are working hard to ensure you can use Zerobase seamlessly with the Arduino IDE. Our team is dedicated to creating a smooth and hassle-free experience for users transitioning to or starting with Zerobase. Whether you're a beginner or an experienced maker, we want to guarantee full compatibility and simplicity when working with the Arduino IDE.
 
-https://github.com/openwch/board_manager_files/raw/main/package_ch32v_index.json
+## Wiki
 
-Then you can search for "**wch**" through the "**board manager**", find the installation package, and install it.
-
-## Supported boards
-
-It will be a long-term support and maintenance project, unless we encounter force majeure factors.The current version supports the following development boards:
-
-- [CH32V00x EVT Boards](#CH32V00x-EVT-Boards)
-- [CH32V10x EVT Boards](#CH32V10x-EVT-Boards)
-- [CH32V20x EVT Boards](#CH32V20x-EVT-Boards)
-- [CH32V30x EVT Boards](#CH32V30x-EVT-Boards)
-- [CH32X035 EVT Boards](#CH32X035-EVT-Boards)
-
-### CH32V00x EVT Boards
-
-| Status | Boards name | Peripherals | Release | Notes |
-| :----: |     ----    |     ----    | :-----: | :---- |
-| :heavy_check_mark: | CH32V003F4P | ADC,DAC,USART,GPIO,EXTI,SysTick | 1.0.0 | SPI,I2C_Master since 1.0.2 |
-
-### CH32V20x EVT Boards
-
-| Status | Boards name | Peripherals | Release | Notes |
-| :----: |     ----    |     ----    | :-----: | :---- |
-| :heavy_check_mark: | CH32V203G8U | ADC,DAC,USART,GPIO,EXTI,SysTick | 1.0.0 | SPI,I2C_Master since 1.0.2 |
-
-### CH32X035 EVT Boards
-
-| Status | Boards name | Peripherals | Release | Notes |
-| :----: |     ----    |     ----    | :-----: | :---- |
-| :heavy_check_mark: | CH32X035G8U | ADC,DAC,USART,GPIO,EXTI,SysTick | 1.0.1 | SPI,I2C_Master since 1.0.2 | 
-
-### CH32V10x EVT Boards
-
-| Status | Boards name | Peripherals | Release | Notes |
-| :----: |     ----    |     ----    | :-----: | :---- |
-| :heavy_check_mark: | CH32V103R8T6_BLACK | ADC,DAC,USART,GPIO,EXTI,SysTick,SPI,I2C_Master | 1.0.3 | - |
-
-### CH32V30x EVT Boards
-
-| Status | Boards name | Peripherals | Release | Notes |
-| :----: |     ----    |     ----    | :-----: | :---- |
-| :heavy_check_mark: | CH32V307VCT6_BLACK | ADC,DAC,USART,GPIO,EXTI,SysTick,SPI,I2C_Master | 1.0.3 | - |
-
-
-## OS support
-
-Adopting toolchain and openocd under [MRS](http://www.mounriver.com/), supporting HPE, custom byte and half-word compression extensions,"upload" via WCH_LINKE. 
-
-**Most importantly, the version of Arduino IDE is 2.0+.**
-
-### Win
-
-If you encounter an error during upload, please confirm that the version of your WCH-LINKE is consistent with the latest version under MRS. 
-WCH-LINKE related information can [refer to this link](https://github.com/openwch/ch32v307/tree/main/WCH-Link). 
-
-### Linux
-
-For Linux, after installing the support package for the first time, to ensure the normal upload function, 
-please open the packages installation path of the Arduino IDE, run the script, and automatically configure the environment.
-
-Usually, it can be operated as follows:<br>
-
-```bash
-cd ~/.arduino15/packages/WCH/tools/beforeinstall/1.0.0
-./start.sh
-```
-After authorization, it will copy or generate some necessary libraries and rules:
-
-```text
-Copy Libs
-[sudo] password for temperslee: 
-Register new Libs
-copy rules
-Reload rules
-DONE
-```
-
-### MAC
-
-For MAC, please install the "libusb" library before starting to use it.
-```bash
-brew install libusb
-```
-If "libusb" related errors still occur when "uploading" firmware after installing the libusb library, 
-please contact the **MRS team** for assistance through "*support@mounriver.com*".
-
+Please visit [wiki page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial
 
 ## Submit bugs
 
-If you have any questions, you could contact me through the email "*yy@wch.cn*".
+If you have any questions, you could contact us through the email "*support@chipstack.vn*".
 Or you could [file an issue on GitHub](https://github.com/openwch/arduino_core_ch32/issues/new).
 
 
