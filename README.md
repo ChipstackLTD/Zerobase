@@ -1,4 +1,5 @@
-![Zerobase logo](https://github.com/user-attachments/assets/0156d473-fe2a-45c6-868e-c79207c5b502)
+![Zerobase logo](https://github.com/user-attachments/assets/85707a5b-7c64-4cc3-b488-461d6257be5c)
+
 # Zerobase Arduino core
 
 ## What is Zerobase
@@ -7,7 +8,7 @@
 
 Key Features of Zerobase:
 
-**Affordable Excellence**: Powered by microcontroller **CH32V003**, Zerobase delivers top-notch features at the **lowest possible cost** to democratize access to technology.
+**Affordable Excellence**: Powered by microcontroller **CH32V003** and **CH32V203**, Zerobase delivers top-notch features at the **lowest possible cost** to democratize access to technology.
 
 **Enhanced Performance**: Faster processing power, expanded memory, and better I/O options compared to traditional Arduino Nano boards.
 
@@ -15,9 +16,9 @@ Key Features of Zerobase:
 
 **Seamless Compatibility**: Works effortlessly with existing Arduino projects, shields, and accessories. We are working hard to ensure you can use Zerobase seamlessly with the Arduino IDE. Our team is dedicated to creating a smooth and hassle-free experience for users transitioning to or starting with Zerobase. Whether you're a beginner or an experienced maker, we want to guarantee full compatibility and simplicity when working with the Arduino IDE.
 
-## Wiki
+## Documentation
 
-Please visit [wiki page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial
+Please visit [documentation page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial
 
 ## Submit bugs
 
