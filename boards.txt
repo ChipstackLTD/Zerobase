@@ -46,14 +46,14 @@ ZEROBASE.menu.upload_method.minichlink=minichlink
 ZEROBASE.menu.upload_method.minichlink.upload.protocol=
 ZEROBASE.menu.upload_method.minichlink.upload.options=
 ZEROBASE.menu.upload_method.minichlink.upload.tool=minichlink
-#ZEROBASE.menu.upload_method.swdMethod=WCH-SWD
-#ZEROBASE.menu.upload_method.swdMethod.upload.protocol=
-#ZEROBASE.menu.upload_method.swdMethod.upload.options=
-#ZEROBASE.menu.upload_method.swdMethod.upload.tool=WCH_linkE
-#ZEROBASE.menu.upload_method.ispMethod=WCH-ISP
-#ZEROBASE.menu.upload_method.ispMethod.upload.protocol=
-#ZEROBASE.menu.upload_method.ispMethod.upload.options=
-#ZEROBASE.menu.upload_method.ispMethod.upload.tool=wchisp
+ZEROBASE.menu.upload_method.swdMethod=WCH-SWD
+ZEROBASE.menu.upload_method.swdMethod.upload.protocol=
+ZEROBASE.menu.upload_method.swdMethod.upload.options=
+ZEROBASE.menu.upload_method.swdMethod.upload.tool=WCH_linkE
+ZEROBASE.menu.upload_method.ispMethod=WCH-ISP
+ZEROBASE.menu.upload_method.ispMethod.upload.protocol=
+ZEROBASE.menu.upload_method.ispMethod.upload.options=
+ZEROBASE.menu.upload_method.ispMethod.upload.tool=wchisp
 
 
 # Clock Select
