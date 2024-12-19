@@ -123,7 +123,8 @@ ZEROBASE.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32V00x_EVT Board   
 
-CH32V00x_EVT.name=CH32V00x
+#CH32V00x_EVT.name=CH32V00x
+CH32V00x_EVT.name=
 CH32V00x_EVT.build.core=arduino
 CH32V00x_EVT.build.board=CH32V00x_EVT
 CH32V00x_EVT.upload.maximum_size=0
@@ -227,7 +228,8 @@ CH32V00x_EVT.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32VM00X_EVT Board   including V/M 002 004 005 006 007
 
-CH32VM00X_EVT.name=CH32VM00X
+#CH32VM00X_EVT.name=CH32VM00X
+CH32VM00X_EVT.name=
 CH32VM00X_EVT.build.core=arduino
 CH32VM00X_EVT.build.board=CH32VM00X_EVT
 CH32VM00X_EVT.upload.maximum_size=0
@@ -331,7 +333,8 @@ CH32VM00X_EVT.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32X035_EVT Board   
 
-CH32X035_EVT.name=CH32X035
+#CH32X035_EVT.name=CH32X035
+CH32X035_EVT.name=
 CH32X035_EVT.build.core=arduino
 CH32X035_EVT.build.board=CH32X035_EVT
 CH32X035_EVT.upload.maximum_size=0
@@ -433,7 +436,8 @@ CH32X035_EVT.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32V10x_EVT Board   -lprintf, CH32V10x_3V3: 3.3V power supply  CH32V10x_5V: 5V power supply
 
-CH32V10x_EVT.name=CH32V10x
+#CH32V10x_EVT.name=CH32V10x
+CH32V10x_EVT.name=
 CH32V10x_EVT.build.core=arduino
 CH32V10x_EVT.build.board=CH32V10x_EVT
 CH32V10x_EVT.upload.maximum_size=0
@@ -541,7 +545,8 @@ CH32V10x_EVT.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32V20x_EVT Board   
 
-CH32V20x_EVT.name=CH32V20x
+#CH32V20x_EVT.name=CH32V20x
+CH32V20x_EVT.name=
 CH32V20x_EVT.build.core=arduino
 CH32V20x_EVT.build.board=CH32V20x_EVT
 CH32V20x_EVT.upload.maximum_size=0
@@ -749,7 +754,8 @@ CH32V20x_EVT.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32V30x_EVT Board   -lprintfloat, CH32V30x_C: connected product_line  CH32V30x: normal product_line
 
-CH32V30x_EVT.name=CH32V30x
+#CH32V30x_EVT.name=CH32V30x
+CH32V30x_EVT.name=
 CH32V30x_EVT.build.core=arduino
 CH32V30x_EVT.build.board=CH32V30x_EVT
 CH32V30x_EVT.upload.maximum_size=0
@@ -877,7 +883,8 @@ CH32V30x_EVT.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##CH32L10x_EVT Board   -lprintf
 
-CH32L10x_EVT.name=CH32L10x
+#CH32L10x_EVT.name=CH32L10x
+CH32L10x_EVT.name=
 CH32L10x_EVT.build.core=arduino
 CH32L10x_EVT.build.board=CH32L10x_EVT
 CH32L10x_EVT.upload.maximum_size=0
