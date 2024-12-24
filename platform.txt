@@ -183,11 +183,11 @@ tools.minichlink.erase.pattern=
 tools.minichlink.bootloader.pattern=
 
 ## WCH-ISP
-tools.wchisp.path={runtime.tools.wchisp.path}/
-tools.wchisp.cmd=wchisp
+tools.wchisp.path={runtime.tools.wchisp.path}/wchisp-win-x64/
+tools.wchisp.cmd=wchisp.exe
 tools.wchisp.upload.params.verbose=
 tools.wchisp.upload.params.quiet=
-tools.wchisp.upload.pattern="{path}{cmd}" {upload.verbose} flash "{build.path}/{build.project_name}.elf"
+tools.wchisp.upload.pattern="{path}{cmd}" {upload.verbose} flash "{build.path}/{build.project_name}.bin"
 
 
 # Debugger configuration (general options)
