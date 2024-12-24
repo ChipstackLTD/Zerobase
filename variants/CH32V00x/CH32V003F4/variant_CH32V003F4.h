@@ -22,32 +22,31 @@
 /* CH32V003F4 Pins */
 
 
-
+/* Mapping to Digital Pins or Analog Pins */
 #define PA1                     PIN_A1
 #define PA2                     PIN_A0
-#define PC0                     2
-#define PC1                     3
-#define PC2                     4
-#define PC3                     5 
+#define PC0                     10
+#define PC1                     18
+#define PC2                     19
+#define PC3                     2 
 #define PC4                     PIN_A2
-#define PC5                     7
-#define PC6                     8
-#define PC7                     9
-#define PD0                     10
-#define PD1                     11
+#define PC5                     13
+#define PC6                     11
+#define PC7                     12
+#define PD0                     1
+#define PD1                     0
 #define PD2                     PIN_A3
-#define PD3                     PIN_A4 
-#define PD4                     PIN_A7
-#define PD5                     PIN_A5
-#define PD6                     PIN_A6 
-#define PD7                     17
+#define PD6                     3 
+#define PD3                     4 
+#define PD4                     5 
+#define PD5                     6 
 
 // Alternate pins number
 #define PD5_ALT1                (PD5  | ALT1)
 #define PD6_ALT1                (PD6  | ALT1)
 
 
-#define NUM_DIGITAL_PINS        18
+#define NUM_DIGITAL_PINS        22
 #define NUM_ANALOG_INPUTS       8
 
 // #define ADC_CTLR_ADCAL          
@@ -55,16 +54,16 @@
 
 
 
-// On-board LED pin number (D2)
+// On-board LED pin number 
 #ifndef LED_BUILTIN
-  #define LED_BUILTIN           PNUM_NOT_DEFINED
+  #define LED_BUILTIN           2
 #endif
 
 
 
-// On-board user button (D3)
+// On-board user button 
 #ifndef USER_BTN
-  #define USER_BTN              PNUM_NOT_DEFINED
+  #define USER_BTN              3
 #endif
 
 
