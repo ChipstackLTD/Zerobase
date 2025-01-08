@@ -18,57 +18,58 @@
 
 // Digital PinName array
 const PinName digitalPin[] = {
-  PA_0,   // D0/A0
-  PA_1,   // D1/A1
-  PA_2,   // D2/A2
-  PA_3,   // D3/A3
-  PA_4,   // D4/A4
-  PA_5,   // D5/A5
-  PA_6,   // D6/A6
-  PA_7,   // D7/A7
-  PA_8,   // D8
-  PA_9,   // D9
-  PA_10,  // D10
-  PA_11,  // D11
-  PA_12,  // D12
-  PA_13,  // D13
-  PA_14,  // D14
-  PA_15,  // D15
-  PB_0,   // D16/A8
-  PB_1,   // D17/A9
-  PB_2,   // D18
-  PB_3,   // D19
-  PB_4,   // D20
-  PB_5,   // D21
-  PB_6,   // D22
-  PB_7,   // D23
-  PB_8,   // D24
-  PB_9,   // D25
-  PB_10,  // D26
-  PB_11,  // D27
-  PB_12,  // D28
-  PB_13,  // D29
-  PB_14,  // D30
-  PB_15,  // D31
-  PC_13,  // D32
-  PC_14,  // D33
-  PC_15,  // D34
-  PD_0,   // D35
-  PD_1    // D36
+  PA_9,   // D0
+  PA_10,  // D1
+  PB_6,   // D2
+  PB_7,   // D3
+  PB_8,   // D4
+  PB_9,   // D5
+  PB_12,  // D6
+  PB_13,  // D7
+  PB_14,  // D8
+  PB_15,  // D9
+  PA_15,  // D10
+  PB_5,   // D11
+  PB_4,   // D12
+  PB_3,   // D13
+  PA_0,   // D14/A0
+  PA_1,   // D15/A1
+  PA_2,   // D16/A2
+  PA_3,   // D17/A3
+  PB_11,  // D18
+  PB_10,  // D19
+  PA_4,   // D20/A6
+  PA_5,   // D21/A7
+  PC_14,  // D22 --> This is for LED
+  PA_6,   // D23/Unused
+  PA_7,   // D24/Unused
+  PA_8,   // D25/Unused
+  PA_11,  // D26/Unused   
+  PA_12,  // D27/Unused
+  PA_13,  // D28/Unused
+  PA_14,  // D29/Unused
+  PB_0,   // D30/Unused
+  PB_1,   // D31/Unused
+  PB_2,   // D32/Unused
+  PC_13,  // D33/Unused
+  PC_15,  // D34/Unused
+  PD_0,   // D35/Unused
+  PD_1,   // D36/Unused
+  NC      // D37 --> This is fake pin
 };
 
 // Analog (Ax) pin number array
 const uint32_t analogInputPin[] = {
-  0,  // A0,  PA0
-  1,  // A1,  PA1
-  2,  // A2,  PA2
-  3,  // A3,  PA3
-  4,  // A4,  PA4
-  5,  // A5,  PA5
-  6,  // A6,  PA6
-  7,  // A7,  PA7
-  16, // A8,  PB0
-  17  // A9,  PB1
+  14,  // A0,  PA0
+  15,  // A1,  PA1
+  16,  // A2,  PA2
+  17,  // A3,  PA3
+  37,  // A4,  NC --> so connect to any NC pin. 37 means NC in digitalPin (also fake pin)
+  37,  // A5,  NC
+  20,  // A6,  PA6
+  21,  // A7,  PA7
+  37, // A8,  NC
+  37  // A9,  NC
 };
 
 

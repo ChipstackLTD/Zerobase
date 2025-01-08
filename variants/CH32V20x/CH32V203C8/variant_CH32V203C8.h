@@ -19,43 +19,43 @@
 #define                         I2C_MODULE_ENABLED
 #define                         TIM_MODULE_ENABLED
 /* CH32V203C8 Pins */
-#define PA0                     PIN_A0
-#define PA1                     PIN_A1
-#define PA2                     PIN_A2
-#define PA3                     PIN_A3
-#define PA4                     PIN_A4
-#define PA5                     PIN_A5
-#define PA6                     PIN_A6
-#define PA7                     PIN_A7
-#define PA8                     8
-#define PA9                     9
-#define PA10                    10
-#define PA11                    11
-#define PA12                    12
-#define PA13                    13
-#define PA14                    14
-#define PA15                    15
-#define PB0                     PIN_A8
-#define PB1                     PIN_A9
-#define PB2                     18
-#define PB3                     19
-#define PB4                     20
-#define PB5                     21
-#define PB6                     22
-#define PB7                     23
-#define PB8                     24
-#define PB9                     25
-#define PB10                    26
-#define PB11                    27
-#define PB12                    28
-#define PB13                    29
-#define PB14                    30
-#define PB15                    31
-#define PC13                    32
-#define PC14                    33
-#define PC15                    34
-#define PD0                     35
-#define PD1                     36
+#define PA9   0
+#define PA10  1
+#define PB6   2
+#define PB7   3
+#define PB8   4
+#define PB9   5
+#define PB12  6
+#define PB13  7
+#define PB14  8
+#define PB15  9
+#define PA15  10
+#define PB5   11
+#define PB4   12
+#define PB3   13
+#define PA0   PIN_A0
+#define PA1   PIN_A1
+#define PA2   PIN_A2
+#define PA3   PIN_A3
+#define PB11  18
+#define PB10  19
+#define PA4   PIN_A6
+#define PA5   PIN_A7
+#define PC14  22
+#define PA6   23
+#define PA7   24
+#define PA8   25
+#define PA11  26
+#define PA12  27
+#define PA13  28
+#define PA14  29
+#define PB0   30
+#define PB1   31
+#define PB2   32
+#define PC13  33
+#define PC15  34
+#define PD0   35
+#define PD1   36
 
 // Alternate pins number
 #define PA0_ALT1                (PA0  | ALT1)
@@ -79,7 +79,7 @@
 #define PB10_ALT1               (PB10 | ALT1)
 #define PB11_ALT1               (PB11 | ALT1)
 
-#define NUM_DIGITAL_PINS        37
+#define NUM_DIGITAL_PINS        38
 #define NUM_ANALOG_INPUTS       10
 // #define ADC_CTLR_ADCAL          
 #define ADC_RESOLUTION          12
@@ -87,7 +87,7 @@
 
 // On-board LED pin number
 #ifndef LED_BUILTIN
-  #define LED_BUILTIN           PNUM_NOT_DEFINED
+  #define LED_BUILTIN           22
 #endif
 
 
@@ -99,10 +99,10 @@
 
 // SPI definitions
 #ifndef PIN_SPI_SS
-  #define PIN_SPI_SS            PA4
+  #define PIN_SPI_SS            PA15
 #endif
 #ifndef PIN_SPI_SS1
-  #define PIN_SPI_SS1           PA15
+  #define PIN_SPI_SS1           PNUM_NOT_DEFINED
 #endif
 #ifndef PIN_SPI_SS2
   #define PIN_SPI_SS2           PNUM_NOT_DEFINED
@@ -112,21 +112,21 @@
 #endif
 
 #ifndef PIN_SPI_MOSI
-  #define PIN_SPI_MOSI          PA7
+  #define PIN_SPI_MOSI          PB5
 #endif
 #ifndef PIN_SPI_MISO
-  #define PIN_SPI_MISO          PA6
+  #define PIN_SPI_MISO          PB4
 #endif
 #ifndef PIN_SPI_SCK
-  #define PIN_SPI_SCK           PA5
+  #define PIN_SPI_SCK           PB3
 #endif
 
 // I2C definitions
 #ifndef PIN_WIRE_SDA
-  #define PIN_WIRE_SDA          PB7
+  #define PIN_WIRE_SDA          PB1
 #endif
 #ifndef PIN_WIRE_SCL
-  #define PIN_WIRE_SCL          PB6
+  #define PIN_WIRE_SCL          PB10
 #endif
 
 // Timer Definitions
