@@ -10,6 +10,14 @@
 int main( void )
 {
     pre_init( );
+
+#ifdef BOARD_ZEROBASE
+    if (FLASH->STATR & (1 << 14))
+        NVIC_SystemReset();
+    SystemReset_StartMode(Start_Mode_BOOT);
+    pinMode(PD4, OUTPUT);
+#endif
+
 #if defined(USE_TINYUSB)
     if (TinyUSB_Device_Init) {
         TinyUSB_Device_Init(0);
