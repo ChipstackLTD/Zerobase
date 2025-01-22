@@ -122,7 +122,7 @@ ZEROBASE.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ##############################################################################
 ##ZEROBASE_2 Board   
 
-ZEROBASE_2.name=CH32V20x
+ZEROBASE_2.name=Zerobase 2
 ZEROBASE_2.build.core=arduino
 ZEROBASE_2.build.board=ZEROBASE_2
 ZEROBASE_2.upload.maximum_size=0
