@@ -18,6 +18,7 @@ menu.upload_method=Upload method
 ZEROBASE.name=Zerobase
 ZEROBASE.build.core=arduino
 ZEROBASE.build.board=ZEROBASE
+ZEROBASE.build.extra_flags=-D BOARD_ZEROBASE
 ZEROBASE.upload.maximum_size=0
 ZEROBASE.upload.maximum_data_size=0
 ZEROBASE.build.variant_h=variant_{build.board}.h
@@ -125,6 +126,7 @@ ZEROBASE.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ZEROBASE_2.name=Zerobase 2
 ZEROBASE_2.build.core=arduino
 ZEROBASE_2.build.board=ZEROBASE_2
+ZEROBASE_2.build.extra_flags=-D BOARD_ZEROBASE2
 ZEROBASE_2.upload.maximum_size=0
 ZEROBASE_2.upload.maximum_data_size=0
 ZEROBASE_2.build.variant_h=variant_{build.board}.h
