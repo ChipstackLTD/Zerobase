@@ -72,16 +72,27 @@ static const uint32_t MOSI = PIN_SPI_MOSI;
 static const uint32_t MISO = PIN_SPI_MISO;
 static const uint32_t SCK  = PIN_SPI_SCK;
 
-/* I2C Definitions */
-#ifndef PIN_WIRE_SDA
-  #define PIN_WIRE_SDA              14
+/* I2C2 Definitions */
+#ifndef PIN_WIRE_SDA2
+#define PIN_WIRE_SDA2 14
 #endif
-#ifndef PIN_WIRE_SCL
-  #define PIN_WIRE_SCL              15
+#ifndef PIN_WIRE_SCL2
+#define PIN_WIRE_SCL2 15
 #endif
 
-static const uint32_t SDA = PIN_WIRE_SDA;
-static const uint32_t SCL = PIN_WIRE_SCL;
+// I2C1 definitions
+#ifndef PIN_WIRE_SDA1
+#define PIN_WIRE_SDA1 3
+#endif
+#ifndef PIN_WIRE_SCL1
+#define PIN_WIRE_SCL1 2
+#endif
+
+static const uint32_t SDA2 = PIN_WIRE_SDA2;
+static const uint32_t SCL2 = PIN_WIRE_SCL2;
+
+static const uint32_t SDA1 = PIN_WIRE_SDA1;
+static const uint32_t SCL1 = PIN_WIRE_SCL1;
 
 #ifdef __cplusplus
 extern "C" {

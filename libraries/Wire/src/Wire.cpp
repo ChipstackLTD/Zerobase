@@ -37,8 +37,8 @@ static const uint8_t MASTER_ADDRESS = 0x01;
 
 TwoWire::TwoWire()
 {
-  _i2c.sda = digitalPinToPinName(SDA);
-  _i2c.scl = digitalPinToPinName(SCL);
+  _i2c.sda = digitalPinToPinName(SDA2);
+  _i2c.scl = digitalPinToPinName(SCL2);
 }
 
 TwoWire::TwoWire(uint32_t sda, uint32_t scl)
@@ -524,4 +524,5 @@ void TwoWire::recoverBus(void)
 }
 
 // Preinstantiate Objects //////////////////////////////////////////////////////
-TwoWire Wire = TwoWire( ); 
+TwoWire Wire = TwoWire( );
+TwoWire Wire1 = TwoWire(SDA1, SCL1);

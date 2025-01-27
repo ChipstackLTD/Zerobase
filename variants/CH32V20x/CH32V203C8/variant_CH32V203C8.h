@@ -121,12 +121,20 @@
   #define PIN_SPI_SCK           PB3
 #endif
 
-// I2C definitions
-#ifndef PIN_WIRE_SDA
-  #define PIN_WIRE_SDA          PB1
+// I2C1 definitions
+#ifndef PIN_WIRE_SDA1
+#define PIN_WIRE_SDA1 PB7
 #endif
-#ifndef PIN_WIRE_SCL
-  #define PIN_WIRE_SCL          PB10
+#ifndef PIN_WIRE_SCL1
+#define PIN_WIRE_SCL1 PB6
+#endif
+
+// I2C2 definitions
+#ifndef PIN_WIRE_SDA2
+#define PIN_WIRE_SDA2 PB11
+#endif
+#ifndef PIN_WIRE_SCL2
+#define PIN_WIRE_SCL2 PB10
 #endif
 
 // Timer Definitions
