@@ -90,8 +90,6 @@
   #define LED_BUILTIN           22
 #endif
 
-
-
 // On-board user button
 #ifndef USER_BTN
   #define USER_BTN              PNUM_NOT_DEFINED
@@ -146,20 +144,32 @@
   #define TIMER_SERVO           TIM2
 #endif
 
-
-// UART Definitions
-#ifndef SERIAL_UART_INSTANCE
-  #define SERIAL_UART_INSTANCE  1
-#endif
-// Default pin used for generic 'Serial' instance
-// Mandatory for Firmata
+// In the "UART Definitions" section:
 #ifndef PIN_SERIAL_RX
-  #define PIN_SERIAL_RX         PA10
+  #define PIN_SERIAL_RX PA10
 #endif
 #ifndef PIN_SERIAL_TX
-  #define PIN_SERIAL_TX         PA9
+  #define PIN_SERIAL_TX PA9
 #endif
 
+#ifndef PIN_SERIAL2_RX
+  #define PIN_SERIAL2_RX PA3 // D17
+#endif
+#ifndef PIN_SERIAL2_TX
+  #define PIN_SERIAL2_TX PA2 // D16
+#endif
+
+#ifndef PIN_SERIAL3_RX
+  #define PIN_SERIAL3_RX PB11 // D18
+#endif
+#ifndef PIN_SERIAL3_TX
+  #define PIN_SERIAL3_TX PB10 // D19
+#endif
+
+// Enable Serial2 and Serial3 instances
+#define HAVE_HWSERIAL1
+#define HAVE_HWSERIAL2
+#define HAVE_HWSERIAL3
 /*----------------------------------------------------------------------------
  *        Arduino objects - C++ only
  *----------------------------------------------------------------------------*/
@@ -187,5 +197,3 @@
     #define SERIAL_PORT_HARDWARE  Serial
   #endif
 #endif
-
-

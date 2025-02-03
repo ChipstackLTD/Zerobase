@@ -112,6 +112,7 @@ serial_t *get_serial_obj(UART_HandleTypeDef *huart)
   */
 void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t parity, uint32_t stopbits)
 {
+  core_debug("Initializing Serial...\n");
   if (obj == NULL) {
     return;
   }
@@ -184,6 +185,7 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
 #if defined(USART2_BASE)
   else if (obj->uart == USART2) 
   {
+    core_debug("Initializing USART2 (Serial2)\n");
     #if defined(CH32L10x) 
     RCC_PB1PeriphClockCmd(RCC_PB1Periph_USART2, ENABLE);
     #elif defined(CH32VM00X)
@@ -198,6 +200,7 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
 #if defined(USART3_BASE) 
   else if (obj->uart == USART3) 
   {
+    core_debug("Initializing USART3 (Serial3)\n");
     #if defined(CH32L10x)
     RCC_PB1PeriphClockCmd(RCC_PB1Periph_USART3, ENABLE);   
     #else

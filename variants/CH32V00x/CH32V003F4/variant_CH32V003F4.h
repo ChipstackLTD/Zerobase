@@ -82,7 +82,6 @@
   #define PIN_SERIAL_TX         PD0
 #endif
 
-
 // SPI definitions
 #ifndef PIN_SPI_SS
   #define PIN_SPI_SS            PC0

@@ -29,20 +29,42 @@
 
 #if defined(UART_MODULE_ENABLED) && !defined(UART_MODULE_ONLY)
 
-
 HardwareSerial::HardwareSerial(void *peripheral)
 {
   setHandler(peripheral);
 
-  setRx(PIN_SERIAL_RX);
-  
-  setTx(PIN_SERIAL_TX);
-  
+#ifdef BOARD_ZEROBASE2
+  // Determine TX/RX pins based on the UART instance
+  if (peripheral == USART1)
+  {
+    setRx(PIN_SERIAL_RX); // PA10 (Serial1 RX)
+    setTx(PIN_SERIAL_TX); // PA9  (Serial1 TX)
+  }
+
+  else if (peripheral == USART2)
+  {
+    setRx(PIN_SERIAL2_RX); // PA3 (Serial2 RX)
+    setTx(PIN_SERIAL2_TX); // PA2 (Serial2 TX)
+  }
+
+
+  else if (peripheral == USART3)
+  {
+    setRx(PIN_SERIAL3_RX); // PB11 (Serial3 RX)
+    setTx(PIN_SERIAL3_TX); // PB10 (Serial3 TX)
+  }
+#endif
+
+#ifdef BOARD_ZEROBASE
+  if (peripheral == USART1)
+  {
+    setRx(PIN_SERIAL_RX);  // PD1 (Serial1 RX)
+    setTx(PIN_SERIAL_TX);  // PD0 (Serial1 TX)
+  }
+#endif
+
   init(_serial.pin_rx, _serial.pin_tx);
 }
-
-
-
 
 void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts)
 {
@@ -167,12 +189,25 @@ int HardwareSerial::read(void)
 }
 
 
+// size_t HardwareSerial::write(const uint8_t *buffer, size_t size)
+// {
+
+//     return  uart_debug_write((uint8_t *)buffer, size);
+// }
+
 size_t HardwareSerial::write(const uint8_t *buffer, size_t size)
 {
+  if (_serial.uart == NULL)
+    return 0; // Ensure UART is initialized
 
-    return  uart_debug_write((uint8_t *)buffer, size);
+  for (size_t i = 0; i < size; i++)
+  {
+    while (serial_tx_active(&_serial))
+      ;                                      // Wait if TX is busy
+    USART_SendData(_serial.uart, buffer[i]); // Send data via the correct UART
+  }
+  return size;
 }
-
 
 size_t HardwareSerial::write(uint8_t c)
 {
