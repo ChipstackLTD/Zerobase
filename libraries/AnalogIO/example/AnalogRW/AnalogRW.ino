@@ -2,11 +2,10 @@
   AnalogRead AnalogWrite Example
 */
 
-
 int led = A2;
 int potPin = A1;
 void setup() {
-  // put your setup code here, to run once:
+  // put your setup code here, to run o                                                                                                                                                                                       nce:
   pinMode(led, OUTPUT);
   pinMode(potPin, INPUT_ANALOG);
 }
