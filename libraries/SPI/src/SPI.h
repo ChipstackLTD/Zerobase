@@ -303,6 +303,7 @@ class SPIClass {
 };
 
 extern SPIClass SPI;
+extern SPIClass SPI_1;
 
 #if defined(SUBGHZSPI_BASE)
 class SUBGHZSPIClass : public SPIClass {
