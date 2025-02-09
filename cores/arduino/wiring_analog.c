@@ -150,6 +150,9 @@ void analogWrite(uint32_t ulPin, uint32_t ulValue)
   uint8_t do_init = 0;
 #endif
   PinName p = digitalPinToPinName(ulPin);
+  if(p == PD_1){
+    pinV32_DisconnectDebug(PD_1);
+  }
   if (p != NC) {
 #if defined(DAC_MODULE_ENABLED) && !defined(DAC_MODULE_ONLY)
     if (pin_in_pinmap(p, PinMap_DAC)) {
