@@ -65,8 +65,9 @@ void analogReadResolution(int res)
       } 
       else 
       {
-        _internalReadResolution = 12;
+        _internalReadResolution = _readResolution;
       }
+      
   } 
   else 
   {
