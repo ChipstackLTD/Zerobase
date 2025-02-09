@@ -303,7 +303,9 @@ class SPIClass {
 };
 
 extern SPIClass SPI;
+#ifdef BOARD_ZEROBASE2
 extern SPIClass SPI_1;
+#endif
 
 #if defined(SUBGHZSPI_BASE)
 class SUBGHZSPIClass : public SPIClass {

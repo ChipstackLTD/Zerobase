@@ -70,9 +70,9 @@
 
 
 // UART Definitions
-#ifndef SERIAL_UART_INSTANCE
-  #define SERIAL_UART_INSTANCE  1
-#endif
+// #ifndef SERIAL_UART_INSTANCE
+//   #define SERIAL_UART_INSTANCE  1
+// #endif
 // Default pin used for generic 'Serial' instance
 // Mandatory for Firmata
 #ifndef PIN_SERIAL_RX
@@ -81,6 +81,8 @@
 #ifndef PIN_SERIAL_TX
   #define PIN_SERIAL_TX         PD0
 #endif
+
+#define HAVE_HWSERIAL1
 
 // SPI definitions
 #ifndef PIN_SPI_SS

@@ -61,6 +61,12 @@ _Static_assert(NUM_ANALOG_INPUTS <= MAX_ANALOG_INPUTS,
 #define PIN_SPI_SCK 13
 #endif
 
+static const uint32_t SS = PIN_SPI_SS;
+static const uint32_t MOSI = PIN_SPI_MOSI;
+static const uint32_t MISO = PIN_SPI_MISO;
+static const uint32_t SCK = PIN_SPI_SCK;
+
+#ifdef BOARD_ZEROBASE2
 #ifndef PIN_SPI_SS1
 #define PIN_SPI_SS1 6
 #endif
@@ -74,15 +80,11 @@ _Static_assert(NUM_ANALOG_INPUTS <= MAX_ANALOG_INPUTS,
 #define PIN_SPI_MOSI1 9
 #endif
 
-static const uint32_t SS = PIN_SPI_SS;
-static const uint32_t MOSI = PIN_SPI_MOSI;
-static const uint32_t MISO = PIN_SPI_MISO;
-static const uint32_t SCK = PIN_SPI_SCK;
-
 static const uint32_t SS1 = PIN_SPI_SS1;
 static const uint32_t SCK1 = PIN_SPI_SCK1;
 static const uint32_t MISO1 = PIN_SPI_MISO1;
 static const uint32_t MOSI1 = PIN_SPI_MOSI1;
+#endif
 
 /* I2C2 Definitions */
 #ifndef PIN_WIRE_SDA2
@@ -92,6 +94,10 @@ static const uint32_t MOSI1 = PIN_SPI_MOSI1;
 #define PIN_WIRE_SCL2 15
 #endif
 
+static const uint32_t SDA2 = PIN_WIRE_SDA2;
+static const uint32_t SCL2 = PIN_WIRE_SCL2;
+
+#ifdef BOARD_ZEROBASE2
 // I2C1 definitions
 #ifndef PIN_WIRE_SDA1
 #define PIN_WIRE_SDA1 3
@@ -100,11 +106,9 @@ static const uint32_t MOSI1 = PIN_SPI_MOSI1;
 #define PIN_WIRE_SCL1 2
 #endif
 
-static const uint32_t SDA2 = PIN_WIRE_SDA2;
-static const uint32_t SCL2 = PIN_WIRE_SCL2;
-
 static const uint32_t SDA1 = PIN_WIRE_SDA1;
 static const uint32_t SCL1 = PIN_WIRE_SCL1;
+#endif
 
 #ifdef __cplusplus
 extern "C"
