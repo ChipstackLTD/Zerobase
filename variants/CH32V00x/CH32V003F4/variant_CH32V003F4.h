@@ -99,11 +99,11 @@
 #endif
 
 // I2C definitions
-#ifndef PIN_WIRE_SDA
-  #define PIN_WIRE_SDA          PC1
+#ifndef PIN_WIRE_SDA2
+  #define PIN_WIRE_SDA2          PC1
 #endif
-#ifndef PIN_WIRE_SCL
-  #define PIN_WIRE_SCL          PC2
+#ifndef PIN_WIRE_SCL2
+  #define PIN_WIRE_SCL2          PC2
 #endif
 
 // Timer Definitions
