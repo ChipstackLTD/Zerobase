@@ -58,6 +58,9 @@ void pinMode(uint32_t ulPin, uint32_t ulMode)
         pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_FLOAT, 0, 0));
         break;
       case OUTPUT:
+        if(p == PD_1){
+          pinV32_DisconnectDebug(PD_1);
+        }
         pin_function(p, CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_PP, 0, 0));
         break;
       case INPUT_PULLUP:
