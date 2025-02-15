@@ -151,6 +151,7 @@ class TwoWire : public Stream {
 
 
 extern TwoWire Wire;
+#ifdef BOARD_ZEROBASE2
 extern TwoWire Wire1;
 
 #endif

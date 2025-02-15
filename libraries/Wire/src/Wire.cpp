@@ -524,5 +524,7 @@ void TwoWire::recoverBus(void)
 }
 
 // Preinstantiate Objects //////////////////////////////////////////////////////
-TwoWire Wire = TwoWire( );
+TwoWire Wire = TwoWire();
+#ifdef BOARD_ZEROBASE2
 TwoWire Wire1 = TwoWire(SDA1, SCL1);
+#endif
