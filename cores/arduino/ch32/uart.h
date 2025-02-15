@@ -74,6 +74,7 @@ typedef struct __UART_HandleTypeDef
     PinName pin_rx;
     PinName pin_rts;
     PinName pin_cts;
+    PinName pin_ck;
     IRQn_Type irq;
     uint8_t index;
   };

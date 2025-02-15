@@ -154,11 +154,16 @@ public:
     void setRts(PinName _rts);
     void setCts(PinName _cts);
     void setRtsCts(PinName _rts, PinName _cts);
+    
+    // Enable Synchronous mode
+    void setClock(uint32_t _ck);
+    void setClock(PinName _ck);
+
     void setHandler(void *handler);
   private:
     uint8_t _config;
     unsigned long _baud;
-    void init(PinName _rx, PinName _tx, PinName _rts = NC, PinName _cts = NC);
+    void init(PinName _rx, PinName _tx, PinName _rts = NC, PinName _cts = NC, PinName _ck = NC);
 };
 
 #if defined(USART1)

@@ -76,9 +76,8 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts)
   _serial.pin_tx = _tx;
   _serial.pin_rts = _rts;
   _serial.pin_cts = _cts;
+  _serial.pin_ck = _ck;
 }
-
-
 
 // Public Methods //////////////////////////////////////////////////////////////
 void HardwareSerial::begin(unsigned long baud, byte config)
@@ -159,6 +158,17 @@ void HardwareSerial::begin(unsigned long baud, byte config)
       Error_Handler();
       break;
   }
+
+  // Enable RTS/CTS hardware flow control if RTS and CTS pins are defined
+  if (_serial.pin_rts != NC)
+  {
+    _serial.uart->CTLR3 |= (USART_CTLR3_RTSE);
+  }
+  if (_serial.pin_cts != NC)
+  {
+    _serial.uart->CTLR3 |= (USART_CTLR3_CTSE);
+  }
+
   uart_init(&_serial, (uint32_t)baud, databits, parity, stopbits);
 }
 
@@ -177,8 +187,31 @@ int HardwareSerial::peek(void)
    return -1;
 }
 
+// int HardwareSerial::read(void)
+// {
+
+//   unsigned char c;
+//   if(uart_getc(&_serial, &c) == 0){
+//     return c;
+//   }else{
+//     return -1;
+//   }
+// }
+
 int HardwareSerial::read(void)
 {
+  if (_serial.pin_rts != NC)
+  {
+    // Nếu UART buffer có dữ liệu thì kéo RTS xuống để báo sẵn sàng nhận
+    if (serial_rx_active(&_serial))
+    {
+      digitalWrite(_serial.pin_rts, LOW);
+    }
+    else
+    {
+      digitalWrite(_serial.pin_rts, HIGH);
+    }
+  }
 
   unsigned char c;
   if(uart_getc(&_serial, &c) == 0){
@@ -188,6 +221,26 @@ int HardwareSerial::read(void)
   }
 }
 
+// int HardwareSerial::read(void)
+// {
+//   unsigned char c;
+
+//   // Nếu buffer chưa rỗng, đọc dữ liệu
+//   if (uart_getc(&_serial, &c) == 0) {
+//     return c;
+//   }
+
+//   if(_serial.pin_rts != NC){
+//   // Nếu buffer đầy, set RTS HIGH để tạm dừng gửi
+//   USART_TypeDef *USARTx = _serial.uart;
+//   if (USART_GetFlagStatus(USARTx, USART_FLAG_RXNE) == RESET) {
+//     USARTx->CTLR3 |= USART_CTLR3_RTSE; // Set RTS HIGH (dừng nhận)
+//   } else {
+//     USARTx->CTLR3 &= ~USART_CTLR3_RTSE; // Set RTS LOW (tiếp tục nhận)
+//   }
+//   }
+//   return -1;
+// }
 
 // size_t HardwareSerial::write(const uint8_t *buffer, size_t size)
 // {
@@ -195,19 +248,45 @@ int HardwareSerial::read(void)
 //     return  uart_debug_write((uint8_t *)buffer, size);
 // }
 
+// size_t HardwareSerial::write(const uint8_t *buffer, size_t size)
+// {
+//   if (_serial.uart == NULL)
+//     return 0; // Ensure UART is initialized
+
+//   for (size_t i = 0; i < size; i++)
+//   {
+//     while (serial_tx_active(&_serial))
+//       ;                                      // Wait if TX is busy
+//     USART_SendData(_serial.uart, buffer[i]); // Send data via the correct UART
+//   }
+//   return size;
+// }
+
 size_t HardwareSerial::write(const uint8_t *buffer, size_t size)
 {
   if (_serial.uart == NULL)
     return 0; // Ensure UART is initialized
 
-  for (size_t i = 0; i < size; i++)
+  size_t sent = 0;
+
+  while (sent < size)
   {
-    while (serial_tx_active(&_serial))
-      ;                                      // Wait if TX is busy
-    USART_SendData(_serial.uart, buffer[i]); // Send data via the correct UART
+    while ((_serial.uart->STATR & USART_STATR_TXE) && (sent < size))
+    {
+      USART_SendData(_serial.uart, buffer[sent++]);
+    }
+
+    if (_serial.pin_cts != NC && digitalRead(_serial.pin_cts) == HIGH)
+    {
+      break; // Stop sending if CTS is HIGH
+    }
   }
-  return size;
+
+  while (!(_serial.uart->STATR & USART_STATR_TC));
+
+  return sent; // Return the number of bytes actually sent
 }
+
 
 size_t HardwareSerial::write(uint8_t c)
 {
@@ -267,13 +346,20 @@ void HardwareSerial::setRtsCts(PinName _rts, PinName _cts)
   _serial.pin_cts = _cts;
 }
 
+void HardwareSerial::setClock(uint32_t _ck)
+{
+  _serial.pin_ck = digitalPinToPinName(_ck);
+}
+
+void HardwareSerial::setClock(PinName _ck)
+{
+  _serial.pin_ck = _ck;
+}
+
 void HardwareSerial::setHandler(void *handler)
 {
    _serial.uart  = (USART_TypeDef *) handler;
 }
-
-
-
 
 #if defined(HAVE_HWSERIAL1) || defined(HAVE_HWSERIAL2) || defined(HAVE_HWSERIAL3) ||\
   defined(HAVE_HWSERIAL4) || defined(HAVE_HWSERIAL5) || defined(HAVE_HWSERIAL6) ||\
@@ -322,7 +408,5 @@ void HardwareSerial::setHandler(void *handler)
     #endif
   #endif
 #endif // HAVE_HWSERIALx
-
-
 
 #endif // UART_MODULE_ENABLED && !UART_MODULE_ONLY

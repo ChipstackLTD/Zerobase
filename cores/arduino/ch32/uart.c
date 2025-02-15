@@ -24,7 +24,7 @@ extern "C" {
 /* If DEBUG_UART is not defined assume this is the one linked to PIN_SERIAL_TX */
 #if !defined(DEBUG_UART)
 #if defined(PIN_SERIAL_TX)
-#define DEBUG_UART          pinmap_peripheral(digitalPinToPinName(PIN_SERIAL_TX), PinMap_UART_TX)
+#define DEBUG_UART pinmap_peripheral(digitalPinToPinName(PIN_SERIAL_TX), PinMap_UART_TX)
 #define DEBUG_PINNAME_TX    digitalPinToPinName(PIN_SERIAL_TX)
 #else
 /* No debug UART defined */
@@ -86,6 +86,7 @@ static serial_t serial_debug =
   .pin_rx = NC,
   .pin_rts = NC,
   .pin_cts = NC,
+  .pin_ck = NC,
   .index = UART_NUM,
 };
 
@@ -268,6 +269,7 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
     pinmap_pinout(obj->pin_cts, PinMap_UART_CTS);
   }
 
+  
   /* Configure uart */
   uart_handlers[obj->index] = huart;
   huart->Instance = (USART_TypeDef *)(obj->uart);
@@ -275,10 +277,8 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
   huart->init.USART_WordLength = databits;
   huart->init.USART_StopBits   = stopbits;
   huart->init.USART_Parity     = parity;  
-  huart->init.USART_Mode       = (USART_Mode_Rx|USART_Mode_Tx);  
+  huart->init.USART_Mode       = (USART_Mode_Rx|USART_Mode_Tx);
   huart->init.USART_HardwareFlowControl = flow_control;
-
-
 
   if (uart_rx == NP) 
   {
@@ -286,6 +286,21 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
   }
 
   USART_Init(huart->Instance, &(huart->init));
+  if (obj->pin_ck != NC) {
+  }
+
+  // Configure clock pin
+  if (obj->pin_ck != NC) {
+    pinmap_pinout(obj->pin_ck, PinMap_UART_CK);
+    /* Enable USART clock output */
+    USART_ClockInitTypeDef USART_ClockInitStruct;
+    USART_ClockInitStruct.USART_Clock = USART_Clock_Enable;
+    USART_ClockInitStruct.USART_CPOL = USART_CPOL_Low;
+    USART_ClockInitStruct.USART_CPHA = USART_CPHA_1Edge;
+    USART_ClockInitStruct.USART_LastBit = USART_LastBit_Enable;
+    USART_ClockInit(huart->Instance, &USART_ClockInitStruct);
+  }
+
   USART_Cmd(huart->Instance, ENABLE);
 }
 

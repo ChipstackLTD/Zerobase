@@ -155,6 +155,12 @@ WEAK const PinMap PinMap_UART_CTS[] = {
 };
 #endif
 
+#ifdef UART_MODULE_ENABLED
+WEAK const PinMap PinMap_UART_CK[] = {
+  {PA_4, USART2, CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_AFPP, 0, AFIO_NONE)},
+};
+#endif
+
 
 //*** SPI ***
 #ifdef SPI_MODULE_ENABLED
