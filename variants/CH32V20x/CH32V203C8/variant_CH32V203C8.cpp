@@ -18,8 +18,8 @@
 
 // Digital PinName array
 const PinName digitalPin[] = {
-  PA_9,   // D0
-  PA_10,  // D1
+  PA_10,   // D0
+  PA_9,  // D1
   PB_6,   // D2
   PB_7,   // D3
   PB_8,   // D4

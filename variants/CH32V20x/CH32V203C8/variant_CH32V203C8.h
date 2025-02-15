@@ -19,8 +19,8 @@
 #define                         I2C_MODULE_ENABLED
 #define                         TIM_MODULE_ENABLED
 /* CH32V203C8 Pins */
-#define PA9   0
-#define PA10  1
+#define PA9 1
+#define PA10 0
 #define PB6   2
 #define PB7   3
 #define PB8   4
