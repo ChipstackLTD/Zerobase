@@ -95,28 +95,39 @@
   #define USER_BTN              PNUM_NOT_DEFINED
 #endif
 
-// SPI definitions
+// SPI1 definitions
 #ifndef PIN_SPI_SS
-  #define PIN_SPI_SS            PA15
+#define PIN_SPI_SS PA15
 #endif
-#ifndef PIN_SPI_SS1
-  #define PIN_SPI_SS1           PNUM_NOT_DEFINED
-#endif
-#ifndef PIN_SPI_SS2
-  #define PIN_SPI_SS2           PNUM_NOT_DEFINED
-#endif
-#ifndef PIN_SPI_SS3
-  #define PIN_SPI_SS3           PNUM_NOT_DEFINED
-#endif
-
 #ifndef PIN_SPI_MOSI
-  #define PIN_SPI_MOSI          PB5
+#define PIN_SPI_MOSI PB5
 #endif
 #ifndef PIN_SPI_MISO
-  #define PIN_SPI_MISO          PB4
+#define PIN_SPI_MISO PB4
 #endif
 #ifndef PIN_SPI_SCK
-  #define PIN_SPI_SCK           PB3
+#define PIN_SPI_SCK PB3
+#endif
+
+// SPI2 definitions
+#ifndef PIN_SPI_SS1
+#define PIN_SPI_SS1 PB12
+#endif
+#ifndef PIN_SPI_SCK1
+#define PIN_SPI_SCK1 PB13
+#endif
+#ifndef PIN_SPI_MISO1
+#define PIN_SPI_MISO1 PB14
+#endif
+#ifndef PIN_SPI_MOSI1
+#define PIN_SPI_MOSI1 PB15
+#endif
+
+#ifndef PIN_SPI_SS2
+#define PIN_SPI_SS2 PNUM_NOT_DEFINED
+#endif
+#ifndef PIN_SPI_SS3
+#define PIN_SPI_SS3 PNUM_NOT_DEFINED
 #endif
 
 // I2C1 definitions

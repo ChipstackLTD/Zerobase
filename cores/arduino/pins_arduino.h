@@ -43,34 +43,48 @@ _Static_assert(NUM_ANALOG_INPUTS <= MAX_ANALOG_INPUTS,
 /* Default for Arduino connector compatibility */
 /* SPI Definitions */
 #ifndef PIN_SPI_SS
-  #define PIN_SPI_SS                10
-#endif
-#ifndef PIN_SPI_SS1
-  #define PIN_SPI_SS1               4
+#define PIN_SPI_SS 10
 #endif
 #ifndef PIN_SPI_SS2
-  #define PIN_SPI_SS2               7
+#define PIN_SPI_SS2 7
 #endif
 #ifndef PIN_SPI_SS3
-  #define PIN_SPI_SS3               8
+#define PIN_SPI_SS3 8
 #endif
 #ifndef PIN_SPI_MOSI
-  #define PIN_SPI_MOSI              11
+#define PIN_SPI_MOSI 11
 #endif
 #ifndef PIN_SPI_MISO
-  #define PIN_SPI_MISO              12
+#define PIN_SPI_MISO 12
 #endif
 #ifndef PIN_SPI_SCK
-  #define PIN_SPI_SCK               13
+#define PIN_SPI_SCK 13
 #endif
 
-static const uint32_t SS   = PIN_SPI_SS;
-static const uint32_t SS1  = PIN_SPI_SS1;
-static const uint32_t SS2  = PIN_SPI_SS2;
-static const uint32_t SS3  = PIN_SPI_SS3;
+static const uint32_t SS = PIN_SPI_SS;
 static const uint32_t MOSI = PIN_SPI_MOSI;
 static const uint32_t MISO = PIN_SPI_MISO;
-static const uint32_t SCK  = PIN_SPI_SCK;
+static const uint32_t SCK = PIN_SPI_SCK;
+
+#ifdef BOARD_ZEROBASE2
+#ifndef PIN_SPI_SS1
+#define PIN_SPI_SS1 6
+#endif
+#ifndef PIN_SPI_SCK1
+#define PIN_SPI_SCK1 7
+#endif
+#ifndef PIN_SPI_MISO1
+#define PIN_SPI_MISO1 8
+#endif
+#ifndef PIN_SPI_MOSI1
+#define PIN_SPI_MOSI1 9
+#endif
+
+static const uint32_t SS1 = PIN_SPI_SS1;
+static const uint32_t SCK1 = PIN_SPI_SCK1;
+static const uint32_t MISO1 = PIN_SPI_MISO1;
+static const uint32_t MOSI1 = PIN_SPI_MOSI1;
+#endif
 
 /* I2C2 Definitions */
 #ifndef PIN_WIRE_SDA2
