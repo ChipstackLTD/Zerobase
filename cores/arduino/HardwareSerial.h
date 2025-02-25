@@ -156,8 +156,11 @@ public:
     void setRtsCts(PinName _rts, PinName _cts);
     
     // Enable Synchronous mode
-    void setClock(uint32_t _ck);
-    void setClock(PinName _ck);
+    void setCKPin(uint32_t _ck);
+    void setCKPin(PinName _ck);
+
+    // Using CTS RTS and CK pin
+    void setUSART();
 
     void setHandler(void *handler);
   private:

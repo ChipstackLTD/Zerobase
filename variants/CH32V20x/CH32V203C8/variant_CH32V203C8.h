@@ -170,6 +170,18 @@
   #define PIN_SERIAL2_TX PA2 // D16
 #endif
 
+#ifndef PIN_SERIAL_2_CTS
+  #define PIN_SERIAL_2_CTS PA0
+#endif
+
+#ifndef PIN_SERIAL_2_RTS
+  #define PIN_SERIAL_2_RTS PA1
+#endif
+
+#ifndef PIN_SERIAL_2_CK
+  #define PIN_SERIAL_2_CK PA4 
+#endif
+
 #ifndef PIN_SERIAL3_RX
   #define PIN_SERIAL3_RX PB11 // D18
 #endif

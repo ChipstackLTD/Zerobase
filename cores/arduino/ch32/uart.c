@@ -288,7 +288,7 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
   USART_Init(huart->Instance, &(huart->init));
   if (obj->pin_ck != NC) {
   }
-
+  #ifdef BOARD_ZEROBASE2
   // Configure clock pin
   if (obj->pin_ck != NC) {
     pinmap_pinout(obj->pin_ck, PinMap_UART_CK);
@@ -300,7 +300,7 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
     USART_ClockInitStruct.USART_LastBit = USART_LastBit_Enable;
     USART_ClockInit(huart->Instance, &USART_ClockInitStruct);
   }
-
+  #endif
   USART_Cmd(huart->Instance, ENABLE);
 }
 
