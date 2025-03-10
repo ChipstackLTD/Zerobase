@@ -159,9 +159,11 @@ public:
     void setCKPin(uint32_t _ck);
     void setCKPin(PinName _ck);
 
+    #ifdef BOARD_ZEROBASE2
     // Using CTS RTS and CK pin
     void setUSART();
-
+    #endif
+    
     void setHandler(void *handler);
   private:
     uint8_t _config;

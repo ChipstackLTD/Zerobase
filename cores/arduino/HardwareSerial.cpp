@@ -302,11 +302,13 @@ void HardwareSerial::setCKPin(PinName _ck)
   _serial.pin_ck = _ck;
 }
 
+#ifdef BOARD_ZEROBASE2
 void HardwareSerial::setUSART(){
   setCts(PIN_SERIAL_2_CTS);
   setRts(PIN_SERIAL_2_RTS);
   setCKPin(PIN_SERIAL_2_CK);
 }
+#endif
 
 void HardwareSerial::setHandler(void *handler)
 {
