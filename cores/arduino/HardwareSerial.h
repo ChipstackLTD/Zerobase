@@ -25,6 +25,9 @@
 #ifndef HardwareSerial_h
 #define HardwareSerial_h
 
+// MMOLE 240619: set OPT_USART1_INT to 1 if you want to use interrupts for receiving serial data.
+#define OPT_USART1_INT 1
+
 #if 1
 
 #include <inttypes.h>
@@ -109,6 +112,18 @@ public:
     {
       begin(baud, SERIAL_8N1);     //SERIAL_9E1_5  SERIAL_8N1
     }
+   // MMOLE: reintroduced RX buffer to properly implement read/available/peek methods
+   volatile rx_buffer_index_t _rx_buffer_head;
+   volatile rx_buffer_index_t _rx_buffer_tail;
+   //volatile tx_buffer_index_t _tx_buffer_head;
+   //volatile tx_buffer_index_t _tx_buffer_tail;
+
+   // Don't put any members after these buffers, since only the first
+   // 32 bytes of this struct can be accessed quickly using the ldd
+   // instruction.
+   unsigned char _rx_buffer[SERIAL_RX_BUFFER_SIZE];
+   //unsigned char _tx_buffer[SERIAL_TX_BUFFER_SIZE];
+
     void begin(unsigned long, uint8_t);
     void end();
 
