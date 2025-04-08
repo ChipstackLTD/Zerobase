@@ -21,7 +21,8 @@
   Modified 6 june 2023 by Temperslee to support wch's risc-v chips
 */
 
-extern "C" {
+extern "C"
+{
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
@@ -506,21 +507,39 @@ inline void TwoWire::resetTxBuffer(void)
 // a mix implementation of Clear Bus from
 // https://www.nxp.com/docs/en/user-guide/UM10204.pdf
 // https://bits4device.wordpress.com/2017/07/28/i2c-bus-recovery/
+// void TwoWire::recoverBus(void)
+// {
+//   pinMode(pinNametoDigitalPin(_i2c.sda), INPUT);
+
+//   if (digitalReadFast(_i2c.sda) == LOW) {
+//     pinMode(pinNametoDigitalPin(_i2c.scl), OUTPUT);
+
+//     for (int i = 0; i < 20; i++) {
+//       digitalWriteFast(_i2c.scl, LOW);
+//       delayMicroseconds(10);
+//       digitalWriteFast(_i2c.scl, HIGH);
+//       delayMicroseconds(10);
+//     }
+//     pinMode(pinNametoDigitalPin(_i2c.scl), INPUT);
+//   }
+// }
+
 void TwoWire::recoverBus(void)
 {
-  pinMode(pinNametoDigitalPin(_i2c.sda), INPUT);
+  RCC->APB1PRSTR |= RCC_I2C1RST; // Đặt bit reset
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
 
-  if (digitalReadFast(_i2c.sda) == LOW) {
-    pinMode(pinNametoDigitalPin(_i2c.scl), OUTPUT);
+  RCC->APB1PRSTR &= ~RCC_I2C1RST; // Xóa bit reset
 
-    for (int i = 0; i < 20; i++) {
-      digitalWriteFast(_i2c.scl, LOW);
-      delayMicroseconds(10);
-      digitalWriteFast(_i2c.scl, HIGH);
-      delayMicroseconds(10);
-    }
-    pinMode(pinNametoDigitalPin(_i2c.scl), INPUT);
-  }
+  I2C1->CTLR1 |= I2C_CTLR1_SWRST;
+  asm volatile("nop");
+  asm volatile("nop");
+  asm volatile("nop");
+
+  I2C1->CTLR1 &= ~I2C_CTLR1_SWRST;
 }
 
 // Preinstantiate Objects //////////////////////////////////////////////////////
