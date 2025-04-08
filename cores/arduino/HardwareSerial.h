@@ -27,6 +27,8 @@
 
 // MMOLE 240619: set OPT_USART1_INT to 1 if you want to use interrupts for receiving serial data.
 #define OPT_USART1_INT 1
+#define OPT_USART2_INT 1
+#define OPT_USART3_INT 1
 
 #if 1
 

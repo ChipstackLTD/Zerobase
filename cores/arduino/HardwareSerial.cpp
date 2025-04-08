@@ -102,6 +102,40 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
   #endif
 #endif
 
+#if defined(USART2)
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
+    void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void USART2_IRQHandler(void) {
+      USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+      HardwareSerial *obj=&Serial2; 
+      obj->_rx_buffer[obj->_rx_buffer_head] = USART_ReceiveData(USART2);    // maybe we should use uart_getc()?
+      obj->_rx_buffer_head++;
+      obj->_rx_buffer_head %= SERIAL_RX_BUFFER_SIZE;
+    }
+  #ifdef __cplusplus
+  }
+  #endif
+  #endif
+
+#endif
+
+#if defined(USART3)
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
+    void USART3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void USART3_IRQHandler(void) {
+      USART_ClearITPendingBit(USART3, USART_IT_RXNE);
+      HardwareSerial *obj=&Serial3; 
+      obj->_rx_buffer[obj->_rx_buffer_head] = USART_ReceiveData(USART3);    // maybe we should use uart_getc()?
+      obj->_rx_buffer_head++;
+      obj->_rx_buffer_head %= SERIAL_RX_BUFFER_SIZE;
+    }
+  #ifdef __cplusplus
+  }
+  #endif
 #endif
 
 // Public Methods //////////////////////////////////////////////////////////////
@@ -195,6 +229,19 @@ void HardwareSerial::begin(unsigned long baud, byte config)
   #endif
   // MMOLE TODO: I only have CH32V003; only tested USART1, how about others?
 #endif
+
+  #if defined(USART2)
+    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+    NVIC_SetPriority(USART2_IRQn, UART_IRQ_PRIO);
+    NVIC_EnableIRQ(USART2_IRQn);
+  #endif
+
+  #if defined(USART3)
+    USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+    NVIC_SetPriority(USART3_IRQn, UART_IRQ_PRIO);
+    NVIC_EnableIRQ(USART3_IRQn);
+  #endif
+  
   // Enable RTS/CTS hardware flow control if RTS and CTS pins are defined
   // if (_serial.pin_rts != NC)
   // {
