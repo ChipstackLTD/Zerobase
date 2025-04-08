@@ -796,6 +796,7 @@ void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin)
 #endif
 #if defined(TIM_CC1NE)
   channelOC.TIM_OCNPolarity = TIM_OCNPolarity_High;
+  channelOC.TIM_OutputNState = TIM_OutputNState_Enable;
 #if defined(TIM_OIS1N)
   channelOC.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 #endif
