@@ -63,28 +63,47 @@ extern void delay(uint32_t ms) ;
 
 #ifndef CH32V10x
 static inline void delayMicroseconds(uint32_t) __attribute__((always_inline, unused));
-static inline void delayMicroseconds(uint32_t us)
-{
-  __IO uint64_t currentTicks = SysTick->CNT;
-  /* Number of ticks per millisecond */
-  uint64_t tickPerMs = SysTick->CMP + 1;
-  /* Number of ticks to count */
-  uint64_t nbTicks = ((us - ((us > 0) ? 1 : 0)) * tickPerMs) / 1000;
-  /* Number of elapsed ticks */
-  uint64_t elapsedTicks = 0;
-  __IO uint64_t oldTicks = currentTicks;
-  do {
-    currentTicks = SysTick->CNT;
-    // elapsedTicks += (oldTicks < currentTicks) ? tickPerMs + oldTicks - currentTicks :
-    //                 oldTicks - currentTicks;
+// static inline void delayMicroseconds(uint32_t us)
+// {
+//   __IO uint64_t currentTicks = SysTick->CNT;
+//   /* Number of ticks per millisecond */
+//   uint64_t tickPerMs = SysTick->CMP + 1;
+//   /* Number of ticks to count */
+//   uint64_t nbTicks = ((us - ((us > 0) ? 1 : 0)) * tickPerMs) / 1000;
+//   /* Number of elapsed ticks */
+//   uint64_t elapsedTicks = 0;
+//   __IO uint64_t oldTicks = currentTicks;
+//   do {
+//     currentTicks = SysTick->CNT;
+//     // elapsedTicks += (oldTicks < currentTicks) ? tickPerMs + oldTicks - currentTicks :
+//     //                 oldTicks - currentTicks;
     
-    //increment
+//     //increment
+//     elapsedTicks += (oldTicks <= currentTicks) ? currentTicks - oldTicks :
+//                      tickPerMs - oldTicks + currentTicks;
+
+//     oldTicks = currentTicks;
+//   } while (nbTicks > elapsedTicks);  
+// }
+
+static inline void delayMicroseconds(uint32_t us) {
+  if (us == 0) return;  
+
+  __IO uint32_t startTicks = SysTick->CNT;
+  uint32_t tickPerMs = SysTick->CMP + 1;
+  uint32_t nbTicks = (us * tickPerMs) / 1000;
+  __IO uint32_t oldTicks = startTicks;
+  uint32_t elapsedTicks = 0;
+
+  while (elapsedTicks < nbTicks) {
+    uint32_t currentTicks = SysTick->CNT;
     elapsedTicks += (oldTicks <= currentTicks) ? currentTicks - oldTicks :
                      tickPerMs - oldTicks + currentTicks;
-
     oldTicks = currentTicks;
-  } while (nbTicks > elapsedTicks);  
+  }
 }
+
+
 #else
 #define SYSTICK_CNTL    (0xE000F004)   
 #define SYSTICK_CNTH    (0xE000F008)

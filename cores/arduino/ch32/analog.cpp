@@ -785,21 +785,32 @@ void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareForma
   * @param  pin : the gpio pin to use
   * @retval None
   */
-void pwm_stop(PinName pin)
-{
-  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
-  HardwareTimer *HT;
-  uint32_t index = get_timer_index(Instance);
-  if (HardwareTimer_Handle[index] == NULL) {
-    HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM));
-  }
+// void pwm_stop(PinName pin)
+// {
+//   TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+//   HardwareTimer *HT;
+//   uint32_t index = get_timer_index(Instance);
+//   if (HardwareTimer_Handle[index] == NULL) {
+//     HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM));
+//   }
 
-  HT = (HardwareTimer *)(HardwareTimer_Handle[index]->__this);
-  if (HT != NULL) {
-    delete (HT);
-    HT = NULL;
+//   HT = (HardwareTimer *)(HardwareTimer_Handle[index]->__this);
+//   if (HT != NULL) {
+//     delete (HT);
+//     HT = NULL;
+//   }
+// }
+
+void pwm_stop(PinName pin) {
+  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+  if (Instance == NULL) {
+      return; // Đảm bảo Instance hợp lệ
   }
+  
+  // Dừng timer trực tiếp thay vì dùng HardwareTimer
+  Instance->CTLR1 &= ~TIM_CC1E; // Dừng bộ đếm
 }
+
 #endif /* TIM_MODULE_ENABLED && !TIM_MODULE_ONLY */
 
 #ifdef __cplusplus

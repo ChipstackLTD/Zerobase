@@ -34,51 +34,67 @@ void pinMode(uint32_t ulPin, uint32_t ulMode)
 
   if (p != NC) {
     // If the pin that support PWM or DAC output, we need to turn it off
-#if (defined(DAC_MODULE_ENABLED) && !defined(DAC_MODULE_ONLY)) ||\
-    (defined(TIM_MODULE_ENABLED) && !defined(TIM_MODULE_ONLY))
-    if (is_pin_configured(p, g_anOutputPinConfigured)) {
-#if defined(DAC_MODULE_ENABLED) && !defined(DAC_MODULE_ONLY)
-      if (pin_in_pinmap(p, PinMap_DAC)) {
-        dac_stop(p);
-      } else
-#endif //DAC_MODULE_ENABLED && !DAC_MODULE_ONLY
-#if defined(TIM_MODULE_ENABLED) && !defined(TIM_MODULE_ONLY)
-        if (pin_in_pinmap(p, PinMap_TIM)) {
-          pwm_stop(p);
-        }
-#endif //TIM_MODULE_ENABLED && !TIM_MODULE_ONLY
-      {
-        reset_pin_configured(p, g_anOutputPinConfigured);
-      }
-    }
-#endif
+// #if (defined(DAC_MODULE_ENABLED) && !defined(DAC_MODULE_ONLY)) ||\
+//     (defined(TIM_MODULE_ENABLED) && !defined(TIM_MODULE_ONLY))
+//     if (is_pin_configured(p, g_anOutputPinConfigured)) {
+// #if defined(DAC_MODULE_ENABLED) && !defined(DAC_MODULE_ONLY)
+//       if (pin_in_pinmap(p, PinMap_DAC)) {
+//         dac_stop(p);
+//       } else
+// #endif //DAC_MODULE_ENABLED && !DAC_MODULE_ONLY
+// #if defined(TIM_MODULE_ENABLED) && !defined(TIM_MODULE_ONLY)
+//         if (pin_in_pinmap(p, PinMap_TIM)) {
+//           pwm_stop(p);
+//         }
+// #endif //TIM_MODULE_ENABLED && !TIM_MODULE_ONLY
+//       {
+//         reset_pin_configured(p, g_anOutputPinConfigured);
+//       }
+//     }
+// #endif
+    // if(ulMode == OUTPUT || ulMode == OUTPUT_OD){
+    //   if(p == PD_1){
+    //     pinV32_DisconnectDebug(PD_1);
+    //   }
+    // }
+    // static const uint32_t pinModeTable[] = {
+    //     CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_FLOAT, 0, 0),  
+    //     CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_PP, 0, 0),  
+    //     CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_PUPD, 0x1, 0),  
+    //     CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_PUPD, 0x2, 0),  
+    //     CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_ANALOG, 0, 0),  
+    //     CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_OD, 0, 0)  
+    // };
+
+    // pin_function(p, pinModeTable[ulMode]);
+
     switch (ulMode)  /* INPUT_FLOATING */
-    {
-      case INPUT: 
-        pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_FLOAT, 0, 0));
-        break;
-      case OUTPUT:
-        if(p == PD_1){
-          pinV32_DisconnectDebug(PD_1);
-        }
-        pin_function(p, CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_PP, 0, 0));
-        break;
-      case INPUT_PULLUP:
-        pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_PUPD, 0x1, 0));
-        break;
-      case INPUT_PULLDOWN:
-        pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_PUPD, 0x2, 0));
-        break;
-      case INPUT_ANALOG:
-        pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_ANALOG, 0, 0));
-        break;
-      case OUTPUT_OD:
-        pin_function(p, CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_OD, 0,0));
-        break;
-      default:
-        Error_Handler();
-        break;
+{
+  case INPUT: 
+    pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_FLOAT, 0, 0));
+    break;
+  case OUTPUT:
+    if(p == PD_1){
+      pinV32_DisconnectDebug(PD_1);
     }
+    pin_function(p, CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_PP, 0, 0));
+    break;
+  case INPUT_PULLUP:
+    pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_PUPD, 0x1, 0));
+    break;
+  case INPUT_PULLDOWN:
+    pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_PUPD, 0x2, 0));
+    break;
+  case INPUT_ANALOG:
+    pin_function(p, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_ANALOG, 0, 0));
+    break;
+  case OUTPUT_OD:
+    pin_function(p, CH_PIN_DATA(CH_MODE_OUTPUT_50MHz, CH_CNF_OUTPUT_OD, 0,0));
+    break;
+  default:
+    Error_Handler();
+    break;
+}
   }
 }
 
