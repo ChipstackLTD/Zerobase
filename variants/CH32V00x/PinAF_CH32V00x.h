@@ -99,97 +99,134 @@ static inline void pinV32_DisconnectDebug(PinName pin)
 #endif 
 }
 
-static inline void pin_SetV32AFPin(uint32_t afnum)
-{
-  // Enable AFIO clock
+// static inline void pin_SetV32AFPin(uint32_t afnum)
+// {
+//   // Enable AFIO clock
+//   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+
+//   switch (afnum) {
+//     case AFIO_Remap_SPI1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_SPI1,ENABLE);
+//       break;
+//     case AFIO_Remap_SPI1_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_SPI1,DISABLE);
+//       break;
+//     case AFIO_PartialRemap_I2C1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap_I2C1,ENABLE);
+//       break;      
+//     case AFIO_FullRemap_I2C1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_I2C1,ENABLE);
+//       break;
+//     case AFIO_Remap_I2C1_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_I2C1,DISABLE);
+//       break;
+//     case AFIO_PartialRemap1_USART1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap1_USART1,ENABLE);
+//       break;
+//     case AFIO_PartialRemap2_USART1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap2_USART1,ENABLE);
+//       break;
+//     case AFIO_FullRemap_USART1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_USART1,ENABLE);
+//       break;         
+//     case AFIO_Remap_USART1_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_USART1,DISABLE);
+//       break;         
+//     case AFIO_PartialRemap1_TIM1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM1,ENABLE);
+//       break;         
+//     case AFIO_PartialRemap2_TIM1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap2_TIM1,ENABLE);
+//       break;  
+//     case AFIO_FullRemap_TIM1_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_TIM1,ENABLE);
+//       break;  
+//     case AFIO_Remap_TIM1_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_TIM1,DISABLE);
+//       break;  
+//     case AFIO_PartialRemap1_TIM2_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2,ENABLE);
+//       break; 
+//     case AFIO_PartialRemap2_TIM2_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_PartialRemap2_TIM2,ENABLE);
+//       break; 
+//     case AFIO_FullRemap_TIM2_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_TIM2,ENABLE);
+//       break; 
+//     case AFIO_Remap_TIM2_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_FullRemap_TIM2,DISABLE);
+//       break; 
+//     case AFIO_Remap_PA1_2_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_PA1_2,ENABLE);
+//       break;
+//     case AFIO_Remap_PA1_2_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_PA1_2,DISABLE);
+//       break;
+//     case AFIO_Remap_ADC1_ETRGINJ_ENBALE:
+//       GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGINJ,ENABLE);
+//       break;
+//     case AFIO_Remap_ADC1_ETRGINJ_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGINJ,DISABLE);
+//       break;
+//     case AFIO_Remap_ADC1_ETRGREG_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGREG,ENABLE);
+//       break;
+//     case AFIO_Remap_ADC1_ETRGREG_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGREG,DISABLE);
+//       break;
+//     case AFIO_Remap_LSI_CAL_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_LSI_CAL,ENABLE);
+//       break;
+//     case AFIO_Remap_LSI_CAL_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_LSI_CAL,DISABLE);
+//       break;
+//     case AFIO_Remap_SDI_Disable_ENABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_SDI_Disable,ENABLE);
+//       break;
+//     case AFIO_Remap_SDI_Disable_DISABLE:
+//       GPIO_PinRemapConfig(GPIO_Remap_SDI_Disable,DISABLE);
+//       break;
+      
+//     default:
+//     case AFIO_NONE:
+//       break;
+//   }
+// }
+
+typedef struct {
+  uint16_t afnum;
+  uint16_t remap;
+} AFIO_Map;
+
+static const AFIO_Map afio_map[] = {
+  {AFIO_Remap_SPI1_ENABLE, GPIO_Remap_SPI1},
+  {AFIO_PartialRemap_I2C1_ENABLE, GPIO_PartialRemap_I2C1},
+  {AFIO_FullRemap_I2C1_ENABLE, GPIO_FullRemap_I2C1},
+  {AFIO_PartialRemap1_USART1_ENABLE, GPIO_PartialRemap1_USART1},
+  {AFIO_PartialRemap2_USART1_ENABLE, GPIO_PartialRemap2_USART1},
+  {AFIO_FullRemap_USART1_ENABLE, GPIO_FullRemap_USART1},
+  {AFIO_PartialRemap1_TIM1_ENABLE, GPIO_PartialRemap1_TIM1},
+  {AFIO_PartialRemap2_TIM1_ENABLE, GPIO_PartialRemap2_TIM1},
+  {AFIO_FullRemap_TIM1_ENABLE, GPIO_FullRemap_TIM1},
+  {AFIO_PartialRemap1_TIM2_ENABLE, GPIO_PartialRemap1_TIM2},
+  {AFIO_PartialRemap2_TIM2_ENABLE, GPIO_PartialRemap2_TIM2},
+  {AFIO_FullRemap_TIM2_ENABLE, GPIO_FullRemap_TIM2},
+  {AFIO_Remap_PA1_2_ENABLE, GPIO_Remap_PA1_2},
+  {AFIO_Remap_ADC1_ETRGINJ_ENBALE, GPIO_Remap_ADC1_ETRGINJ},
+  {AFIO_Remap_ADC1_ETRGREG_ENABLE, GPIO_Remap_ADC1_ETRGREG},
+  {AFIO_Remap_LSI_CAL_ENABLE, GPIO_Remap_LSI_CAL},
+  {AFIO_Remap_SDI_Disable_ENABLE, GPIO_Remap_SDI_Disable},
+  {AFIO_NONE, 0} // Kết thúc danh sách
+};
+
+static inline void pin_SetV32AFPin(uint32_t afnum) {
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 
-  switch (afnum) {
-    case AFIO_Remap_SPI1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_SPI1,ENABLE);
-      break;
-    case AFIO_Remap_SPI1_DISABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_SPI1,DISABLE);
-      break;
-    case AFIO_PartialRemap_I2C1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap_I2C1,ENABLE);
-      break;      
-    case AFIO_FullRemap_I2C1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_I2C1,ENABLE);
-      break;
-    case AFIO_Remap_I2C1_DISABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_I2C1,DISABLE);
-      break;
-    case AFIO_PartialRemap1_USART1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap1_USART1,ENABLE);
-      break;
-    case AFIO_PartialRemap2_USART1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap2_USART1,ENABLE);
-      break;
-    case AFIO_FullRemap_USART1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_USART1,ENABLE);
-      break;         
-    case AFIO_Remap_USART1_DISABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_USART1,DISABLE);
-      break;         
-    case AFIO_PartialRemap1_TIM1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM1,ENABLE);
-      break;         
-    case AFIO_PartialRemap2_TIM1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap2_TIM1,ENABLE);
-      break;  
-    case AFIO_FullRemap_TIM1_ENABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_TIM1,ENABLE);
-      break;  
-    case AFIO_Remap_TIM1_DISABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_TIM1,DISABLE);
-      break;  
-    case AFIO_PartialRemap1_TIM2_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2,ENABLE);
-      break; 
-    case AFIO_PartialRemap2_TIM2_ENABLE:
-      GPIO_PinRemapConfig(GPIO_PartialRemap2_TIM2,ENABLE);
-      break; 
-    case AFIO_FullRemap_TIM2_ENABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_TIM2,ENABLE);
-      break; 
-    case AFIO_Remap_TIM2_DISABLE:
-      GPIO_PinRemapConfig(GPIO_FullRemap_TIM2,DISABLE);
-      break; 
-    case AFIO_Remap_PA1_2_ENABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_PA1_2,ENABLE);
-      break;
-    case AFIO_Remap_PA1_2_DISABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_PA1_2,DISABLE);
-      break;
-    case AFIO_Remap_ADC1_ETRGINJ_ENBALE:
-      GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGINJ,ENABLE);
-      break;
-    case AFIO_Remap_ADC1_ETRGINJ_DISABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGINJ,DISABLE);
-      break;
-    case AFIO_Remap_ADC1_ETRGREG_ENABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGREG,ENABLE);
-      break;
-    case AFIO_Remap_ADC1_ETRGREG_DISABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_ADC1_ETRGREG,DISABLE);
-      break;
-    case AFIO_Remap_LSI_CAL_ENABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_LSI_CAL,ENABLE);
-      break;
-    case AFIO_Remap_LSI_CAL_DISABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_LSI_CAL,DISABLE);
-      break;
-    case AFIO_Remap_SDI_Disable_ENABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_SDI_Disable,ENABLE);
-      break;
-    case AFIO_Remap_SDI_Disable_DISABLE:
-      GPIO_PinRemapConfig(GPIO_Remap_SDI_Disable,DISABLE);
-      break;
-      
-    default:
-    case AFIO_NONE:
-      break;
+  for (int i = 0; afio_map[i].afnum != AFIO_NONE; i++) {
+      if (afio_map[i].afnum == afnum) {
+          GPIO_PinRemapConfig(afio_map[i].remap, ENABLE);
+          return;
+      }
   }
 }
 
