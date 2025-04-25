@@ -146,6 +146,40 @@
 #define PIN_WIRE_SCL2 PB10
 #endif
 
+#ifndef SDA
+#define SDA PIN_WIRE_SDA2
+#endif
+
+#ifndef SCL
+#define SCL PIN_WIRE_SCL2
+#endif
+
+#ifndef DM
+#define DM PB6
+#endif
+
+#ifndef DP
+#define DP PB7
+#endif
+
+#ifndef CRX
+#define CRX PB8
+#endif
+
+#ifndef CTX
+#define CTX PB9
+#endif
+
+#ifndef MO
+#define MO PIN_SPI_MOSI
+#endif
+
+#ifndef MI
+#define MI PIN_SPI_MISO
+#endif
+
+
+
 // Timer Definitions
 // Use TIM6/TIM7 when possible as servo and tone don't need GPIO output pin
 #ifndef TIMER_TONE
