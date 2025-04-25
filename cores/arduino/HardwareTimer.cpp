@@ -126,58 +126,76 @@ HardwareTimer::HardwareTimer(TIM_TypeDef *instance)
   * @param  Timer instance ex: TIM1, ...
   * @retval None
   */
+// void HardwareTimer::setup(TIM_TypeDef *instance)
+// {
+//   uint32_t index = get_timer_index(instance);
+//   if (index == UNKNOWN_TIMER) {
+//     Error_Handler();
+//   }
+
+//   // Already initialized?
+//   if (_timerObj.handle.Instance) {
+//     Error_Handler();
+//   }
+
+//   HardwareTimer_Handle[index] = &_timerObj;
+
+//   _timerObj.handle.Instance = instance;
+
+//   _timerObj.__this = (void *)this;
+//   _timerObj.preemptPriority = TIM_IRQ_PRIO;   
+//   _timerObj.subPriority = TIM_IRQ_SUBPRIO;
+//   _timerObj.handle.Init={0}; 
+//   /* Enable timer clock. Even if it is also done in HAL_TIM_Base_MspInit(),
+//      it is done there so that it is possible to write registers right now */
+//   enableTimerClock(&(_timerObj.handle));
+//   // Initialize NULL callbacks
+//   for (int i = 0; i < TIMER_CHANNELS + 1 ; i++) {
+//     callbacks[i] = NULL;
+//   }
+
+//   // Initialize channel mode and complementary
+//   for (int i = 0; i < TIMER_CHANNELS; i++) {
+// #if defined(TIM_CC1NE)
+//     isComplementaryChannel[i] = false;  //如果有互补通道定义
+// #endif
+//     _ChannelMode[i] = TIMER_DISABLED;    
+//   }
+
+//   /* Configure timer with some default values */
+
+//   _timerObj.handle.Init.TIM_Prescaler     = 0;
+//   _timerObj.handle.Init.TIM_Period        = MAX_RELOAD;
+//   _timerObj.handle.Init.TIM_CounterMode   = TIM_CounterMode_Up;
+//   _timerObj.handle.Init.TIM_ClockDivision = TIM_CKD_DIV1;
+
+
+// #if defined(TIM_RCR_REP)
+//   _timerObj.handle.Init.TIM_RepetitionCounter = 0;
+// #endif
+//   TIM_ARRPreloadConfig( _timerObj.handle.Instance, ENABLE );
+//   TIM_TimeBaseInit( _timerObj.handle.Instance, &_timerObj.handle.Init);
+
+// }
+
 void HardwareTimer::setup(TIM_TypeDef *instance)
 {
+  // Store timer information
   uint32_t index = get_timer_index(instance);
-  if (index == UNKNOWN_TIMER) {
-    Error_Handler();
-  }
-
-  // Already initialized?
-  if (_timerObj.handle.Instance) {
-    Error_Handler();
-  }
-
   HardwareTimer_Handle[index] = &_timerObj;
-
   _timerObj.handle.Instance = instance;
-
   _timerObj.__this = (void *)this;
-  _timerObj.preemptPriority = TIM_IRQ_PRIO;   
-  _timerObj.subPriority = TIM_IRQ_SUBPRIO;
-  _timerObj.handle.Init={0}; 
-  /* Enable timer clock. Even if it is also done in HAL_TIM_Base_MspInit(),
-     it is done there so that it is possible to write registers right now */
+  
+  // Enable timer clock - this is required
   enableTimerClock(&(_timerObj.handle));
-  // Initialize NULL callbacks
-  for (int i = 0; i < TIMER_CHANNELS + 1 ; i++) {
-    callbacks[i] = NULL;
-  }
-
-  // Initialize channel mode and complementary
-  for (int i = 0; i < TIMER_CHANNELS; i++) {
-#if defined(TIM_CC1NE)
-    isComplementaryChannel[i] = false;  //如果有互补通道定义
-#endif
-    _ChannelMode[i] = TIMER_DISABLED;    
-  }
-
-  /* Configure timer with some default values */
-
-  _timerObj.handle.Init.TIM_Prescaler     = 0;
-  _timerObj.handle.Init.TIM_Period        = MAX_RELOAD;
-  _timerObj.handle.Init.TIM_CounterMode   = TIM_CounterMode_Up;
-  _timerObj.handle.Init.TIM_ClockDivision = TIM_CKD_DIV1;
-
-
-#if defined(TIM_RCR_REP)
-  _timerObj.handle.Init.TIM_RepetitionCounter = 0;
-#endif
-  TIM_ARRPreloadConfig( _timerObj.handle.Instance, ENABLE );
-  TIM_TimeBaseInit( _timerObj.handle.Instance, &_timerObj.handle.Init);
-
+  
+  // Minimal timer settings needed for PWM
+  instance->PSC = 0;                  // Prescaler = 0
+  instance->ATRLR = MAX_RELOAD;       // Auto-reload value
+  
+  // Enable ARR preload
+  instance->CTLR1 |= TIM_ARPE;
 }
-
 
 /**
   * @brief  Pause HardwareTimer: stop timer
@@ -245,21 +263,39 @@ void HardwareTimer::pauseChannel(uint32_t channel)
   * @param  None
   * @retval None
   */
+// void HardwareTimer::resume(void)
+// {
+//   // Clear flag and enable IT
+//   if (callbacks[0])  // 0 for update
+//   {
+//     TIM_ClearFlag(_timerObj.handle.Instance,TIM_FLAG_Update );  
+//     TIM_ITConfig(_timerObj.handle.Instance, TIM_IT_Update, ENABLE);
+//     // Start timer in Time base mode. Required when there is no channel used but only update interrupt.
+//     TIM_Cmd(_timerObj.handle.Instance, ENABLE );
+//   }
+//   // Resume all channels
+//   resumeChannel(1);
+//   resumeChannel(2);
+//   resumeChannel(3);
+//   resumeChannel(4);
+// }
+
 void HardwareTimer::resume(void)
 {
-  // Clear flag and enable IT
-  if (callbacks[0])  // 0 for update
+  // Enable the PWM timer and outputs
+  _timerObj.handle.Instance->BDTR |= TIM_MOE;  // MOE ENABLE (required for PWM)
+  
+  // Enable all PWM channels
+  for (uint32_t i = 1; i <= 4; i++)
   {
-    TIM_ClearFlag(_timerObj.handle.Instance,TIM_FLAG_Update );  
-    TIM_ITConfig(_timerObj.handle.Instance, TIM_IT_Update, ENABLE);
-    // Start timer in Time base mode. Required when there is no channel used but only update interrupt.
-    TIM_Cmd(_timerObj.handle.Instance, ENABLE );
+    int timChannel = getChannel(i);
+    if (timChannel != -1) {
+      TIM_CCxCmd(_timerObj.handle.Instance, timChannel, TIM_CCx_Enable);
+    }
   }
-  // Resume all channels
-  resumeChannel(1);
-  resumeChannel(2);
-  resumeChannel(3);
-  resumeChannel(4);
+  
+  // Start the timer
+  TIM_Cmd(_timerObj.handle.Instance, ENABLE);
 }
 
 /**
@@ -770,141 +806,608 @@ void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, uint32_t pin)
   * @param  pin: pin name, ex: PB_0
   * @retval None
   */
+// void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin)
+// {
+//   int timChannel = getChannel(channel);  //get arduino channel-->timer channel
+//   int timAssociatedInputChannel;      
+//   TIM_OCInitTypeDef channelOC={0};
+//   TIM_ICInitTypeDef channelIC={0};
+
+//   if (timChannel == -1) {
+//     Error_Handler();
+//   }
+
+//   /* Configure some default values. Maybe overwritten later */
+//   channelOC.TIM_OCMode = TIMER_NOT_USED;  //set default value 0xFFFF
+
+//   // channelOC.Pulse = __HAL_TIM_GET_COMPARE(&(_timerObj.handle), timChannel);  // keep same value already written in hardware register
+//   channelOC.TIM_Pulse =  (((timChannel) == TIM_Channel_1) ? (_timerObj.handle.Instance->CH1CVR) :\
+//                           ((timChannel) == TIM_Channel_2) ? (_timerObj.handle.Instance->CH2CVR) :\
+//                           ((timChannel) == TIM_Channel_3) ? (_timerObj.handle.Instance->CH3CVR) :\
+//                           (_timerObj.handle.Instance->CH4CVR));
+
+//   channelOC.TIM_OCPolarity = TIM_OCPolarity_High;
+// #if defined(TIM_OIS1)
+//   channelOC.TIM_OCIdleState = TIM_OSSIState_Disable;
+// #endif
+// #if defined(TIM_CC1NE)
+//   channelOC.TIM_OCNPolarity = TIM_OCNPolarity_High;
+//   channelOC.TIM_OutputNState = TIM_OutputNState_Enable;
+// #if defined(TIM_OIS1N)
+//   channelOC.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+// #endif
+// #endif
+//   channelIC.TIM_ICPolarity = TIM_ICPolarity_Rising;
+//   channelIC.TIM_ICSelection = TIM_ICSelection_DirectTI;
+//   channelIC.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+//   channelIC.TIM_ICFilter = 0;
+
+//   switch (mode) {
+//     case TIMER_DISABLED:
+//       channelOC.TIM_OCMode = TIM_OCMode_Timing;
+
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       break;
+//     case TIMER_OUTPUT_COMPARE:
+//       /* In case of TIMER_OUTPUT_COMPARE, there is no output and thus no pin to
+//        * configure, and no channel. So nothing to do. For compatibility reason
+//        * restore TIMER_DISABLED if necessary.
+//        */
+//       if (_ChannelMode[channel - 1] != TIMER_DISABLED) {
+//         _ChannelMode[channel - 1] = TIMER_DISABLED;
+//         channelOC.TIM_OCMode = TIM_OCMode_Timing;
+
+//         TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       }
+//       return;
+//     case TIMER_OUTPUT_COMPARE_ACTIVE:
+//       channelOC.TIM_OCMode = TIM_OCMode_Active;
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+
+//       break;
+//     case TIMER_OUTPUT_COMPARE_INACTIVE:
+//       channelOC.TIM_OCMode = TIM_OCMode_Inactive;
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       break;
+//     case TIMER_OUTPUT_COMPARE_TOGGLE:
+//       channelOC.TIM_OCMode = TIM_OCMode_Toggle;
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       break;
+//     case TIMER_OUTPUT_COMPARE_PWM1:
+//       channelOC.TIM_OCMode = TIM_OCMode_PWM1;
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);      
+//       break;
+//     case TIMER_OUTPUT_COMPARE_PWM2:
+//       channelOC.TIM_OCMode = TIM_OCMode_PWM2;
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       break;
+    
+//     case TIMER_OUTPUT_COMPARE_FORCED_ACTIVE:
+//       channelOC.TIM_OCMode = 0x0050;   //force high
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       break;
+//     case TIMER_OUTPUT_COMPARE_FORCED_INACTIVE:
+//       channelOC.TIM_OCMode = 0x0040;   //force low
+//       TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+//       break;
+//     case TIMER_INPUT_CAPTURE_RISING:
+//       channelIC.TIM_ICPolarity = TIM_ICPolarity_Rising;
+//       TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC,timChannel);
+//       break;
+//     case TIMER_INPUT_CAPTURE_FALLING:
+//       channelIC.TIM_ICPolarity = TIM_ICPolarity_Falling;
+//       TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC,timChannel);
+//       break;
+//     case TIMER_INPUT_CAPTURE_BOTHEDGE:
+//       channelIC.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
+//       TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC,timChannel);      
+//       break;
+//     case TIMER_INPUT_FREQ_DUTY_MEASUREMENT:
+//       // Configure 1st channel
+//       channelIC.TIM_ICPolarity = TIM_ICPolarity_Rising;
+//       channelIC.TIM_ICSelection = TIM_ICSelection_DirectTI;
+//       TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC, timChannel); 
+//       // // Identify and configure 2nd associated channel
+//       timAssociatedInputChannel = getAssociatedChannel(channel);
+//       _ChannelMode[timAssociatedInputChannel - 1] = mode;
+//       channelIC.TIM_ICPolarity = TIM_ICPolarity_Falling;
+//       channelIC.TIM_ICSelection = TIM_ICSelection_IndirectTI;
+//       TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC, timChannel);    
+//       break;
+//     default:
+//       break;
+//   }
+//   // Save channel selected mode to object attribute
+//   _ChannelMode[channel - 1] = mode;
+//   if (pin != NC) 
+//   {
+//     if ((int)getTimerChannel(pin) == timChannel) 
+//     {
+//       /* Configure PWM GPIO pins */
+//       pinmap_pinout(pin, PinMap_TIM);
+//       if ((mode == TIMER_INPUT_CAPTURE_RISING) || (mode == TIMER_INPUT_CAPTURE_FALLING) \
+//           || (mode == TIMER_INPUT_CAPTURE_BOTHEDGE) || (mode == TIMER_INPUT_FREQ_DUTY_MEASUREMENT)) 
+//       {
+//           //input alternate function must configure GPIO in input mode
+//           pinMode(pinNametoDigitalPin(pin), INPUT);  //set input
+//       }
+//     } 
+//     else
+//      {
+//       // Pin doesn't match with timer output channels
+//       Error_Handler();
+//     }
+
+// #if defined(TIM_CC1NE)
+//      isComplementaryChannel[channel - 1] = CH_PIN_INVERTED(pinmap_function(pin, PinMap_TIM)); //(x>>20)&0x1 
+// #endif
+//   }
+// }
+
+
+// void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin)
+// {
+//   // Only proceed if mode is one of the PWM modes
+//   if (mode != TIMER_OUTPUT_COMPARE_PWM1 && mode != TIMER_OUTPUT_COMPARE_PWM2) {
+//     return; // Silently ignore non-PWM modes
+//   }
+
+//   int timChannel = getChannel(channel);  // get arduino channel-->timer channel
+//   TIM_OCInitTypeDef channelOC = {0};
+
+//   if (timChannel == -1) {
+//     Error_Handler();
+//   }
+
+//   // Get current pulse value
+//   channelOC.TIM_Pulse = (((timChannel) == TIM_Channel_1) ? (_timerObj.handle.Instance->CH1CVR) :
+//                          ((timChannel) == TIM_Channel_2) ? (_timerObj.handle.Instance->CH2CVR) :
+//                          ((timChannel) == TIM_Channel_3) ? (_timerObj.handle.Instance->CH3CVR) :
+//                          (_timerObj.handle.Instance->CH4CVR));
+
+//   // Set up for PWM mode
+//   channelOC.TIM_OCMode = (mode == TIMER_OUTPUT_COMPARE_PWM1) ? TIM_OCMode_PWM1 : TIM_OCMode_PWM2;
+//   channelOC.TIM_OCPolarity = TIM_OCPolarity_High;
+// #if defined(TIM_OIS1)
+//   channelOC.TIM_OCIdleState = TIM_OSSIState_Disable;
+// #endif
+// #if defined(TIM_CC1NE)
+//   channelOC.TIM_OCNPolarity = TIM_OCNPolarity_High;
+//   channelOC.TIM_OutputNState = TIM_OutputNState_Enable;
+// #if defined(TIM_OIS1N)
+//   channelOC.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+// #endif
+// #endif
+
+//   // Configure the channel directly instead of calling TIM_OC_ConfigChannel_Static
+//   TIM_TypeDef *TIMx = _timerObj.handle.Instance;
+  
+//   #ifdef BOARD_ZEROBASE
+//   switch (timChannel)
+//   {
+//     case TIM_Channel_1:
+//       // Configure Channel 1
+//       TIMx->CCER &= (uint16_t)(~(uint16_t)TIM_CC1E);
+      
+//       {
+//         uint16_t tmpccmrx = TIMx->CHCTLR1;
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC1M));
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC1S));
+//         tmpccmrx |= channelOC.TIM_OCMode;
+        
+//         uint16_t tmpccer = TIMx->CCER;
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC1P));
+//         tmpccer |= channelOC.TIM_OCPolarity;
+//         tmpccer |= channelOC.TIM_OutputState;
+        
+//         uint16_t tmpcr2 = TIMx->CTLR2;
+        
+//         if(TIMx == TIM1)
+//         {
+//           tmpccer &= (uint16_t)(~((uint16_t)TIM_CC1NP));
+//           tmpccer |= channelOC.TIM_OCNPolarity;
+          
+//           tmpccer &= (uint16_t)(~((uint16_t)TIM_CC1NE));
+//           tmpccer |= channelOC.TIM_OutputNState;
+          
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS1));
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS1N));
+          
+//           tmpcr2 |= channelOC.TIM_OCIdleState;
+//           tmpcr2 |= channelOC.TIM_OCNIdleState;
+          
+//           TIMx->CTLR2 = tmpcr2;
+//         }
+        
+//         TIMx->CHCTLR1 = tmpccmrx;
+//         TIMx->CH1CVR = channelOC.TIM_Pulse;
+//         TIMx->CCER = tmpccer;
+//       }
+//       break;
+      
+//     case TIM_Channel_2:
+//       // Configure Channel 2
+//       TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CC2E));
+      
+//       {
+//         uint16_t tmpccmrx = TIMx->CHCTLR1;
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC2M));
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC2S));
+//         tmpccmrx |= (uint16_t)(channelOC.TIM_OCMode << 8);
+        
+//         uint16_t tmpccer = TIMx->CCER;
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC2P));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OCPolarity << 4);
+//         tmpccer |= (uint16_t)(channelOC.TIM_OutputState << 4);
+        
+//         uint16_t tmpcr2 = TIMx->CTLR2;
+        
+//         if(TIMx == TIM1)
+//         {
+//           tmpccer &= (uint16_t)(~((uint16_t)TIM_CC2NP));
+//           tmpccer |= (uint16_t)(channelOC.TIM_OCNPolarity << 4);
+//           tmpccer &= (uint16_t)(~((uint16_t)TIM_CC2NE));
+//           tmpccer |= (uint16_t)(channelOC.TIM_OutputNState << 4);
+          
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS2));
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS2N));
+//           tmpcr2 |= (uint16_t)(channelOC.TIM_OCIdleState << 2);
+//           tmpcr2 |= (uint16_t)(channelOC.TIM_OCNIdleState << 2);
+          
+//           TIMx->CTLR2 = tmpcr2;
+//         }
+        
+//         TIMx->CHCTLR1 = tmpccmrx;
+//         TIMx->CH2CVR = channelOC.TIM_Pulse;
+//         TIMx->CCER = tmpccer;
+//       }
+//       break;
+      
+//     case TIM_Channel_3:
+//       // Configure Channel 3
+//       TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CC3E));
+      
+//       {
+//         uint16_t tmpccmrx = TIMx->CHCTLR2;
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC3M));
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC3S));
+//         tmpccmrx |= channelOC.TIM_OCMode;
+        
+//         uint16_t tmpccer = TIMx->CCER;
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC3P));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OCPolarity << 8);
+//         tmpccer |= (uint16_t)(channelOC.TIM_OutputState << 8);
+        
+//         uint16_t tmpcr2 = TIMx->CTLR2;
+        
+//         if(TIMx == TIM1)
+//         {
+//           tmpccer &= (uint16_t)(~((uint16_t)TIM_CC3NP));
+//           tmpccer |= (uint16_t)(channelOC.TIM_OCNPolarity << 8);
+//           tmpccer &= (uint16_t)(~((uint16_t)TIM_CC3NE));
+//           tmpccer |= (uint16_t)(channelOC.TIM_OutputNState << 8);
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS3));
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS3N));
+//           tmpcr2 |= (uint16_t)(channelOC.TIM_OCIdleState << 4);
+//           tmpcr2 |= (uint16_t)(channelOC.TIM_OCNIdleState << 4);
+          
+//           TIMx->CTLR2 = tmpcr2;
+//         }
+        
+//         TIMx->CHCTLR2 = tmpccmrx;
+//         TIMx->CH3CVR = channelOC.TIM_Pulse;
+//         TIMx->CCER = tmpccer;
+//       }
+//       break;
+      
+//     case TIM_Channel_4:
+//       // Configure Channel 4
+//       TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CC4E));
+      
+//       {
+//         uint16_t tmpccmrx = TIMx->CHCTLR2;
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC4M));
+//         tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC4S));
+//         tmpccmrx |= (uint16_t)(channelOC.TIM_OCMode << 8);
+        
+//         uint16_t tmpccer = TIMx->CCER;
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC4P));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OCPolarity << 12);
+//         tmpccer |= (uint16_t)(channelOC.TIM_OutputState << 12);
+        
+//         uint16_t tmpcr2 = TIMx->CTLR2;
+        
+//         if(TIMx == TIM1)
+//         {
+//           tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS4));
+//           tmpcr2 |= (uint16_t)(channelOC.TIM_OCIdleState << 6);
+          
+//           TIMx->CTLR2 = tmpcr2;
+//         }
+        
+//         TIMx->CHCTLR2 = tmpccmrx;
+//         TIMx->CH4CVR = channelOC.TIM_Pulse;
+//         TIMx->CCER = tmpccer;
+//       }
+//       break;
+      
+//     default:
+//       break;
+//   }
+
+//   #elif defined(BOARD_ZEROBASE2)
+//   // Exact implementation from your second code example
+//   switch (timChannel)
+//   {
+//     case TIM_Channel_1:
+//     {
+//       uint16_t tmpccmrx = 0, tmpccer = 0, tmpcr2 = 0;
+
+//       TIMx->CCER &= (uint16_t)(~(uint16_t)TIM_CC1E);
+//       tmpccer = TIMx->CCER;
+//       tmpcr2 = TIMx->CTLR2;
+//       tmpccmrx = TIMx->CHCTLR1;
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC1M));
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC1S));
+//       tmpccmrx |= channelOC.TIM_OCMode;
+//       tmpccer &= (uint16_t)(~((uint16_t)TIM_CC1P));
+//       tmpccer |= channelOC.TIM_OCPolarity;
+//       tmpccer |= channelOC.TIM_OutputState;
+
+//       if((TIMx == TIM1))
+//       {
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC1NP));
+//         tmpccer |= channelOC.TIM_OCNPolarity;
+
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC1NE));
+//         tmpccer |= channelOC.TIM_OutputNState;
+
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS1));
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS1N));
+
+//         tmpcr2 |= channelOC.TIM_OCIdleState;
+//         tmpcr2 |= channelOC.TIM_OCNIdleState;
+//       }
+
+//       TIMx->CTLR2 = tmpcr2;
+//       TIMx->CHCTLR1 = tmpccmrx;
+//       TIMx->CH1CVR = channelOC.TIM_Pulse;
+//       TIMx->CCER = tmpccer;
+//       break;
+//     }
+
+//     case TIM_Channel_2:
+//     {
+//       uint16_t tmpccmrx = 0, tmpccer = 0, tmpcr2 = 0;
+
+//       TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CC2E));
+//       tmpccer = TIMx->CCER;
+//       tmpcr2 = TIMx->CTLR2;
+//       tmpccmrx = TIMx->CHCTLR1;
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC2M));
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC2S));
+//       tmpccmrx |= (uint16_t)(channelOC.TIM_OCMode << 8);
+//       tmpccer &= (uint16_t)(~((uint16_t)TIM_CC2P));
+//       tmpccer |= (uint16_t)(channelOC.TIM_OCPolarity << 4);
+//       tmpccer |= (uint16_t)(channelOC.TIM_OutputState << 4);
+
+//       if((TIMx == TIM1))
+//       {
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC2NP));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OCNPolarity << 4);
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC2NE));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OutputNState << 4);
+
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS2));
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS2N));
+//         tmpcr2 |= (uint16_t)(channelOC.TIM_OCIdleState << 2);
+//         tmpcr2 |= (uint16_t)(channelOC.TIM_OCNIdleState << 2);
+//       }
+
+//       TIMx->CTLR2 = tmpcr2;
+//       TIMx->CHCTLR1 = tmpccmrx;
+//       TIMx->CH2CVR = channelOC.TIM_Pulse;
+//       TIMx->CCER = tmpccer;
+//       break;
+//     }
+
+//     case TIM_Channel_3:
+//     {
+//       uint16_t tmpccmrx = 0, tmpccer = 0, tmpcr2 = 0;
+
+//       TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CC3E));
+//       tmpccer = TIMx->CCER;
+//       tmpcr2 = TIMx->CTLR2;
+//       tmpccmrx = TIMx->CHCTLR2;
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC3M));
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC3S));
+//       tmpccmrx |= channelOC.TIM_OCMode;
+//       tmpccer &= (uint16_t)(~((uint16_t)TIM_CC3P));
+//       tmpccer |= (uint16_t)(channelOC.TIM_OCPolarity << 8);
+//       tmpccer |= (uint16_t)(channelOC.TIM_OutputState << 8);
+
+//       if((TIMx == TIM1))
+//       {
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC3NP));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OCNPolarity << 8);
+//         tmpccer &= (uint16_t)(~((uint16_t)TIM_CC3NE));
+//         tmpccer |= (uint16_t)(channelOC.TIM_OutputNState << 8);
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS3));
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS3N));
+//         tmpcr2 |= (uint16_t)(channelOC.TIM_OCIdleState << 4);
+//         tmpcr2 |= (uint16_t)(channelOC.TIM_OCNIdleState << 4);
+//       }
+
+//       TIMx->CTLR2 = tmpcr2;
+//       TIMx->CHCTLR2 = tmpccmrx;
+//       TIMx->CH3CVR = channelOC.TIM_Pulse;
+//       TIMx->CCER = tmpccer;
+//       break;
+//     }
+
+//     case TIM_Channel_4:
+//     {
+//       uint16_t tmpccmrx = 0, tmpccer = 0, tmpcr2 = 0;
+
+//       TIMx->CCER &= (uint16_t)(~((uint16_t)TIM_CC4E));
+//       tmpccer = TIMx->CCER;
+//       tmpcr2 = TIMx->CTLR2;
+//       tmpccmrx = TIMx->CHCTLR2;
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_OC4M));
+//       tmpccmrx &= (uint16_t)(~((uint16_t)TIM_CC4S));
+//       tmpccmrx |= (uint16_t)(channelOC.TIM_OCMode << 8);
+//       tmpccer &= (uint16_t)(~((uint16_t)TIM_CC4P));
+//       tmpccer |= (uint16_t)(channelOC.TIM_OCPolarity << 12);
+//       tmpccer |= (uint16_t)(channelOC.TIM_OutputState << 12);
+
+//       if((TIMx == TIM1))
+//       {
+//         tmpcr2 &= (uint16_t)(~((uint16_t)TIM_OIS4));
+//         tmpcr2 |= (uint16_t)(channelOC.TIM_OCIdleState << 6);
+//       }
+
+//       TIMx->CTLR2 = tmpcr2;
+//       TIMx->CHCTLR2 = tmpccmrx;
+//       TIMx->CH4CVR = channelOC.TIM_Pulse;
+//       TIMx->CCER = tmpccer;
+//       break;
+//     }
+
+//     default:
+//       break;
+//   }
+//   #endif
+//   // Save channel mode to object attribute
+//   _ChannelMode[channel - 1] = mode;
+  
+//   // Configure pin if provided
+//   if (pin != NC) 
+//   {
+//     if ((int)getTimerChannel(pin) == timChannel) 
+//     {
+//       /* Configure PWM GPIO pins */
+//       pinmap_pinout(pin, PinMap_TIM);
+//     } 
+//     else
+//     {
+//       // Pin doesn't match with timer output channels
+//       Error_Handler();
+//     }
+
+// #if defined(TIM_CC1NE)
+//     isComplementaryChannel[channel - 1] = CH_PIN_INVERTED(pinmap_function(pin, PinMap_TIM));
+// #endif
+//   }
+// }
+
 void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin)
 {
-  int timChannel = getChannel(channel);  //get arduino channel-->timer channel
-  int timAssociatedInputChannel;      
-  TIM_OCInitTypeDef channelOC={0};
-  TIM_ICInitTypeDef channelIC={0};
+  // Only proceed if mode is one of the PWM modes
+  if (mode != TIMER_OUTPUT_COMPARE_PWM1 && mode != TIMER_OUTPUT_COMPARE_PWM2) {
+    return;
+  }
 
+  int timChannel = getChannel(channel);
   if (timChannel == -1) {
     Error_Handler();
   }
 
-  /* Configure some default values. Maybe overwritten later */
-  channelOC.TIM_OCMode = TIMER_NOT_USED;  //set default value 0xFFFF
-
-  // channelOC.Pulse = __HAL_TIM_GET_COMPARE(&(_timerObj.handle), timChannel);  // keep same value already written in hardware register
-  channelOC.TIM_Pulse =  (((timChannel) == TIM_Channel_1) ? (_timerObj.handle.Instance->CH1CVR) :\
-                          ((timChannel) == TIM_Channel_2) ? (_timerObj.handle.Instance->CH2CVR) :\
-                          ((timChannel) == TIM_Channel_3) ? (_timerObj.handle.Instance->CH3CVR) :\
-                          (_timerObj.handle.Instance->CH4CVR));
-
-  channelOC.TIM_OCPolarity = TIM_OCPolarity_High;
-#if defined(TIM_OIS1)
-  channelOC.TIM_OCIdleState = TIM_OSSIState_Disable;
-#endif
-#if defined(TIM_CC1NE)
-  channelOC.TIM_OCNPolarity = TIM_OCNPolarity_High;
-  channelOC.TIM_OutputNState = TIM_OutputNState_Enable;
-#if defined(TIM_OIS1N)
-  channelOC.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
-#endif
-#endif
-  channelIC.TIM_ICPolarity = TIM_ICPolarity_Rising;
-  channelIC.TIM_ICSelection = TIM_ICSelection_DirectTI;
-  channelIC.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-  channelIC.TIM_ICFilter = 0;
-
-  switch (mode) {
-    case TIMER_DISABLED:
-      channelOC.TIM_OCMode = TIM_OCMode_Timing;
-
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
+  TIM_TypeDef *TIMx = _timerObj.handle.Instance;
+  
+  // Get current pulse value and determine channel-specific parameters
+  uint32_t pulse = 0;
+  uint8_t shift = 0;
+  uint8_t is_odd_channel = 0;
+  
+  switch (timChannel) {
+    case TIM_Channel_1: 
+      pulse = TIMx->CH1CVR; 
+      shift = 0; 
+      is_odd_channel = 1;
       break;
-    case TIMER_OUTPUT_COMPARE:
-      /* In case of TIMER_OUTPUT_COMPARE, there is no output and thus no pin to
-       * configure, and no channel. So nothing to do. For compatibility reason
-       * restore TIMER_DISABLED if necessary.
-       */
-      if (_ChannelMode[channel - 1] != TIMER_DISABLED) {
-        _ChannelMode[channel - 1] = TIMER_DISABLED;
-        channelOC.TIM_OCMode = TIM_OCMode_Timing;
-
-        TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-      }
+    case TIM_Channel_2: 
+      pulse = TIMx->CH2CVR; 
+      shift = 4; 
+      is_odd_channel = 0;
+      break;
+    case TIM_Channel_3: 
+      pulse = TIMx->CH3CVR; 
+      shift = 8; 
+      is_odd_channel = 1;
+      break;
+    case TIM_Channel_4: 
+      pulse = TIMx->CH4CVR; 
+      shift = 12; 
+      is_odd_channel = 0;
+      break;
+    default: 
       return;
-    case TIMER_OUTPUT_COMPARE_ACTIVE:
-      channelOC.TIM_OCMode = TIM_OCMode_Active;
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-
-      break;
-    case TIMER_OUTPUT_COMPARE_INACTIVE:
-      channelOC.TIM_OCMode = TIM_OCMode_Inactive;
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-      break;
-    case TIMER_OUTPUT_COMPARE_TOGGLE:
-      channelOC.TIM_OCMode = TIM_OCMode_Toggle;
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-      break;
-    case TIMER_OUTPUT_COMPARE_PWM1:
-      channelOC.TIM_OCMode = TIM_OCMode_PWM1;
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);      
-      break;
-    case TIMER_OUTPUT_COMPARE_PWM2:
-      channelOC.TIM_OCMode = TIM_OCMode_PWM2;
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-      break;
-    
-    case TIMER_OUTPUT_COMPARE_FORCED_ACTIVE:
-      channelOC.TIM_OCMode = 0x0050;   //force high
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-      break;
-    case TIMER_OUTPUT_COMPARE_FORCED_INACTIVE:
-      channelOC.TIM_OCMode = 0x0040;   //force low
-      TIM_OC_ConfigChannel_Static(_timerObj.handle.Instance, &channelOC, timChannel);
-      break;
-    case TIMER_INPUT_CAPTURE_RISING:
-      channelIC.TIM_ICPolarity = TIM_ICPolarity_Rising;
-      TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC,timChannel);
-      break;
-    case TIMER_INPUT_CAPTURE_FALLING:
-      channelIC.TIM_ICPolarity = TIM_ICPolarity_Falling;
-      TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC,timChannel);
-      break;
-    case TIMER_INPUT_CAPTURE_BOTHEDGE:
-      channelIC.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
-      TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC,timChannel);      
-      break;
-    case TIMER_INPUT_FREQ_DUTY_MEASUREMENT:
-      // Configure 1st channel
-      channelIC.TIM_ICPolarity = TIM_ICPolarity_Rising;
-      channelIC.TIM_ICSelection = TIM_ICSelection_DirectTI;
-      TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC, timChannel); 
-      // // Identify and configure 2nd associated channel
-      timAssociatedInputChannel = getAssociatedChannel(channel);
-      _ChannelMode[timAssociatedInputChannel - 1] = mode;
-      channelIC.TIM_ICPolarity = TIM_ICPolarity_Falling;
-      channelIC.TIM_ICSelection = TIM_ICSelection_IndirectTI;
-      TIM_IC_ConfigChannel_Static(_timerObj.handle.Instance, &channelIC, timChannel);    
-      break;
-    default:
-      break;
   }
-  // Save channel selected mode to object attribute
+  
+  // Disable channel
+  TIMx->CCER &= ~(TIM_CC1E << shift);
+  
+  // Configure PWM mode and channel
+  uint16_t ocMode = (mode == TIMER_OUTPUT_COMPARE_PWM1) ? TIM_OCMode_PWM1 : TIM_OCMode_PWM2;
+  
+  if (timChannel <= TIM_Channel_2) {
+    // Channels 1 & 2 use CHCTLR1
+    if (is_odd_channel) {
+      // Channel 1, 3
+      TIMx->CHCTLR1 = (TIMx->CHCTLR1 & ~(TIM_OC1M | TIM_CC1S)) | ocMode;
+    } else {
+      // Channel 2
+      TIMx->CHCTLR1 = (TIMx->CHCTLR1 & ~(TIM_OC2M | TIM_CC2S)) | (ocMode << 8);
+    }
+  } else {
+    // Channels 3 & 4 use CHCTLR2
+    if (is_odd_channel) {
+      // Channel 3
+      TIMx->CHCTLR2 = (TIMx->CHCTLR2 & ~(TIM_OC3M | TIM_CC3S)) | ocMode;
+    } else {
+      // Channel 4
+      TIMx->CHCTLR2 = (TIMx->CHCTLR2 & ~(TIM_OC4M | TIM_CC4S)) | (ocMode << 8);
+    }
+  }
+  
+  // Configure PWM output
+  uint16_t ccer = TIMx->CCER;
+  ccer &= ~(TIM_CC1P << shift);
+  ccer |= (TIM_OCPolarity_High << shift) | (TIM_OutputState_Enable << shift);
+  
+  // Configure complementary PWM output (PWM N) for TIM1
+  if (TIMx == TIM1) {
+#if defined(TIM_CC1NE)
+    if (timChannel != TIM_Channel_4) {  // Channels 1-3 have complementary outputs
+      ccer &= ~((TIM_CC1NP | TIM_CC1NE) << shift);
+      ccer |= ((TIM_OCNPolarity_High | TIM_OutputNState_Enable) << shift);
+    }
+#endif
+  }
+  
+  TIMx->CCER = ccer;
+  
+  // Set pulse value
+  switch (timChannel) {
+    case TIM_Channel_1: TIMx->CH1CVR = pulse; break;
+    case TIM_Channel_2: TIMx->CH2CVR = pulse; break;
+    case TIM_Channel_3: TIMx->CH3CVR = pulse; break;
+    case TIM_Channel_4: TIMx->CH4CVR = pulse; break;
+  }
+  
+  // Save channel mode
   _ChannelMode[channel - 1] = mode;
-  if (pin != NC) 
-  {
-    if ((int)getTimerChannel(pin) == timChannel) 
-    {
-      /* Configure PWM GPIO pins */
+  
+  // Configure pin if provided
+  if (pin != NC) {
+    if ((int)getTimerChannel(pin) == timChannel) {
       pinmap_pinout(pin, PinMap_TIM);
-      if ((mode == TIMER_INPUT_CAPTURE_RISING) || (mode == TIMER_INPUT_CAPTURE_FALLING) \
-          || (mode == TIMER_INPUT_CAPTURE_BOTHEDGE) || (mode == TIMER_INPUT_FREQ_DUTY_MEASUREMENT)) 
-      {
-          //input alternate function must configure GPIO in input mode
-          pinMode(pinNametoDigitalPin(pin), INPUT);  //set input
-      }
-    } 
-    else
-     {
-      // Pin doesn't match with timer output channels
+#if defined(TIM_CC1NE)
+      isComplementaryChannel[channel - 1] = CH_PIN_INVERTED(pinmap_function(pin, PinMap_TIM));
+#endif
+    } else {
       Error_Handler();
     }
-
-#if defined(TIM_CC1NE)
-     isComplementaryChannel[channel - 1] = CH_PIN_INVERTED(pinmap_function(pin, PinMap_TIM)); //(x>>20)&0x1 
-#endif
   }
 }
 

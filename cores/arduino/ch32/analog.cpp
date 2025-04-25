@@ -755,30 +755,677 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
   * @param  value : the value to push on the PWM output
   * @retval None
   */
-void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution)
-{
-  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
-  HardwareTimer *HT;
-  TimerModes_t previousMode;
-  uint32_t index = get_timer_index(Instance);
-  if (HardwareTimer_Handle[index] == NULL) {
-    HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM));
-  }
 
-  HT = (HardwareTimer *)(HardwareTimer_Handle[index]->__this);
+// void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution)
+// {
+//   TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+//   HardwareTimer *HT;
+//   TimerModes_t previousMode;
+//   uint32_t index = get_timer_index(Instance);
+  
+//   // If there is no timer for this index, create one
+//   if (HardwareTimer_Handle[index] == NULL) {
+//     static HardwareTimer timers[TIMER_NUM];
+    
+//     // We're using the no-args constructor and then calling setup manually
+//     timers[index].setup(Instance);
+    
+//     // Now HardwareTimer_Handle[index] should be set
+//   }
+  
+//   // At this point, HardwareTimer_Handle[index] should be set
+//   HT = (HardwareTimer *)(HardwareTimer_Handle[index]->__this);
+//   uint32_t channel = CH_PIN_CHANNEL(pinmap_function(pin, PinMap_TIM));
+//   previousMode = HT->getMode(channel);
+  
+//   if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
+//     HT->setMode(channel, TIMER_OUTPUT_COMPARE_PWM1, pin);
+//   }
+  
+//   HT->setOverflow(PWM_freq, HERTZ_FORMAT);
+//   HT->setCaptureCompare(channel, value, resolution);
+  
+//   if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
+//     HT->resume();
+//   }
+// }
 
-  uint32_t channel = CH_PIN_CHANNEL(pinmap_function(pin, PinMap_TIM));
+// void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution)
+// {  
 
-  previousMode = HT->getMode(channel);
-  if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
-    HT->setMode(channel, TIMER_OUTPUT_COMPARE_PWM1, pin);
-  }
-  HT->setOverflow(PWM_freq, HERTZ_FORMAT);
-  HT->setCaptureCompare(channel, value, resolution);
-  if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
-    HT->resume();
+
+//   TIM_OCInitTypeDef TIM_OCInitStructure = { 0 };
+//   TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = { 0 };
+//   uint32_t channel = getTimerChannel(pin);
+
+//    // Configure pin if provided
+//  if (pin != NC) {
+//     pinmap_pinout(pin, PinMap_TIM);
+// }
+//   TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+// #if defined(TIM1_BASE)
+//   if (Instance == TIM1) {
+//     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+//   }
+// #endif
+// #if defined(TIM2_BASE)
+//   if (Instance == TIM2) {
+//     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+//   }
+// #endif
+// #if defined(TIM3_BASE)
+//   if (Instance == TIM3) {
+//     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+//   }
+// #endif
+// #if defined(TIM4_BASE)
+//   if (Instance == TIM4) {
+//     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+//   }
+// #endif
+
+//   // Get correct timer clock frequency
+//   RCC_ClocksTypeDef RCC_ClocksStatus;
+//   RCC_GetClocksFreq(&RCC_ClocksStatus);
+//   uint32_t timerClock;
+
+//   // APB1 peripherals get PCLK1, but if APB1 prescaler != 1, timer gets PCLK1*2
+//   if (RCC_ClocksStatus.PCLK1_Frequency < RCC_ClocksStatus.SYSCLK_Frequency) {
+//     timerClock = RCC_ClocksStatus.PCLK1_Frequency * 2;
+//   } else {
+//     timerClock = RCC_ClocksStatus.PCLK1_Frequency;
+//   }
+
+//   // Calculate prescaler and period for the target frequency
+//   uint32_t prescaler = 1;
+//   uint32_t period = timerClock / (PWM_freq * prescaler);
+
+//   // Adjust prescaler if period is too large
+//   while (period > 65535 && prescaler < 65535) {
+//     prescaler++;
+//     period = timerClock / (PWM_freq * prescaler);
+//   }
+
+//   // Ensure period isn't too small
+//   if (period < 100) {
+//     period = 100;
+//     prescaler = timerClock / (PWM_freq * period);
+//   }
+
+//   // Configure Timer base
+//   TIM_TimeBaseInitStructure.TIM_Period = period - 1;
+//   TIM_TimeBaseInitStructure.TIM_Prescaler = prescaler - 1;
+//   TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+//   TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+//   TIM_TimeBaseInit(Instance, &TIM_TimeBaseInitStructure);
+
+//   // Calculate pulse based on duty cycle
+//   uint32_t maxValue = (1 << resolution) - 1;
+//   uint32_t pulse = (period * value) / maxValue;
+
+
+//   // Configure PWM for Channel 3
+//   TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+//   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+//   TIM_OCInitStructure.TIM_Pulse = pulse;
+//   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+
+//   if (Instance == TIM1 && channel != TIM_Channel_4) {
+//     // TIM1 channels 1-3 have complementary outputs
+//     TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+//     TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+//     TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+//     TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+//   }
+
+//   // Initialize Instance Channel 3
+
+
+//   if (Instance == TIM1) {
+//     TIM_CtrlPWMOutputs(TIM1, ENABLE);
+//   }
+
+//   if (channel == TIM_Channel_1) {
+//     // Initialize Instance Channel 1
+//     TIM_OC1Init(Instance, &TIM_OCInitStructure);
+//     TIM_OC1PreloadConfig(Instance, TIM_OCPreload_Enable);
+//   } else if (channel == TIM_Channel_2) {
+//     // Initialize Instance Channel 2
+//     TIM_OC2Init(Instance, &TIM_OCInitStructure);
+//     TIM_OC2PreloadConfig(Instance, TIM_OCPreload_Enable);
+//   } else if (channel == TIM_Channel_3) {
+//     // Initialize Instance Channel 3
+//     TIM_OC3Init(Instance, &TIM_OCInitStructure);
+//     TIM_OC3PreloadConfig(Instance, TIM_OCPreload_Enable);
+//   } else if (channel == TIM_Channel_4) {
+//     // Initialize Instance Channel 4
+//     TIM_OC4Init(Instance, &TIM_OCInitStructure);
+//     TIM_OC4PreloadConfig(Instance, TIM_OCPreload_Enable);
+//   }
+//   // Enable preload
+//   TIM_ARRPreloadConfig(Instance, ENABLE);
+
+//   // Enable the timer
+//   TIM_Cmd(Instance, ENABLE);
+// }
+
+// *** WORKING *** //
+
+// // Global structures to store timer configurations
+// typedef struct {
+//   uint32_t initialized;
+//   uint32_t frequency;
+//   uint32_t period;
+// } TimerInfo_t;
+
+// // Array to track timer configurations (for TIM1, TIM2, TIM3, TIM4)
+// static TimerInfo_t timer_info[4] = {0};
+
+// // Function to get timer index
+// uint8_t getTimerIndex(TIM_TypeDef *Instance) {
+// uint8_t idx = 0xFF; // Invalid index by default
+
+// #if defined(TIM1_BASE)
+// if (Instance == TIM1) idx = 0;
+// #endif
+// #if defined(TIM2_BASE)
+// if (Instance == TIM2) idx = 1;
+// #endif
+// #if defined(TIM3_BASE)
+// if (Instance == TIM3) idx = 2;
+// #endif
+// #if defined(TIM4_BASE)
+// if (Instance == TIM4) idx = 3;
+// #endif
+
+// return idx;
+// }
+
+// // Function to only update PWM duty cycle without reinitializing the timer
+// void pwm_update_duty(PinName pin, uint32_t value, TimerCompareFormat_t resolution) {
+// uint32_t channel = getTimerChannel(pin);
+// TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+// uint8_t timer_idx = getTimerIndex(Instance);
+
+// if (timer_idx != 0xFF && timer_info[timer_idx].initialized) {
+//   uint32_t period = timer_info[timer_idx].period;
+//   uint32_t maxValue = (1 << resolution) - 1;
+//   uint32_t pulse = (period * value) / maxValue;
+  
+//   // Update the duty cycle without changing timer configuration
+//   switch (channel) {
+//     case TIM_Channel_1:
+//       TIM_SetCompare1(Instance, pulse);
+//       break;
+//     case TIM_Channel_2:
+//       TIM_SetCompare2(Instance, pulse);
+//       break;
+//     case TIM_Channel_3:
+//       TIM_SetCompare3(Instance, pulse);
+//       break;
+//     case TIM_Channel_4:
+//       TIM_SetCompare4(Instance, pulse);
+//       break;
+//   }
+// }
+// }
+
+// // Modified pwm_start function
+// void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution) {  
+// TIM_OCInitTypeDef TIM_OCInitStructure = { 0 };
+// TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = { 0 };
+// uint32_t channel = getTimerChannel(pin);
+
+// // Configure pin if provided
+// if (pin != NC) {
+//   pinmap_pinout(pin, PinMap_TIM);
+// }
+
+// TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+// uint8_t timer_idx = getTimerIndex(Instance);
+
+// // Enable relevant timer clock
+// #if defined(TIM1_BASE)
+// if (Instance == TIM1) {
+//   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+// }
+// #endif
+// #if defined(TIM2_BASE)
+// if (Instance == TIM2) {
+//   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+// }
+// #endif
+// #if defined(TIM3_BASE)
+// if (Instance == TIM3) {
+//   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+// }
+// #endif
+// #if defined(TIM4_BASE)
+// if (Instance == TIM4) {
+//   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+// }
+// #endif
+
+// // If timer is already initialized with the same frequency, just update duty cycle
+// if (timer_idx != 0xFF && timer_info[timer_idx].initialized) {
+//   if (timer_info[timer_idx].frequency == PWM_freq) {
+//     pwm_update_duty(pin, value, resolution);
+//     return;
+//   }
+// }
+
+// // Get correct timer clock frequency
+// RCC_ClocksTypeDef RCC_ClocksStatus;
+// RCC_GetClocksFreq(&RCC_ClocksStatus);
+// uint32_t timerClock;
+
+// // Select proper clock source based on timer
+// if (Instance == TIM1) {
+//   // TIM1 is on APB2
+//   if (RCC_ClocksStatus.PCLK2_Frequency < RCC_ClocksStatus.SYSCLK_Frequency) {
+//     timerClock = RCC_ClocksStatus.PCLK2_Frequency * 2;
+//   } else {
+//     timerClock = RCC_ClocksStatus.PCLK2_Frequency;
+//   }
+// } else {
+//   // TIM2, TIM3, TIM4 are on APB1
+//   if (RCC_ClocksStatus.PCLK1_Frequency < RCC_ClocksStatus.SYSCLK_Frequency) {
+//     timerClock = RCC_ClocksStatus.PCLK1_Frequency * 2;
+//   } else {
+//     timerClock = RCC_ClocksStatus.PCLK1_Frequency;
+//   }
+// }
+
+// // Calculate prescaler and period for the target frequency
+// uint32_t prescaler = 1;
+// uint32_t period = timerClock / (PWM_freq * prescaler);
+
+// // Adjust prescaler if period is too large
+// while (period > 65535 && prescaler < 65535) {
+//   prescaler++;
+//   period = timerClock / (PWM_freq * prescaler);
+// }
+
+// // Ensure period isn't too small
+// if (period < 100) {
+//   period = 100;
+//   prescaler = timerClock / (PWM_freq * period);
+// }
+
+// // Configure Timer base
+// TIM_TimeBaseInitStructure.TIM_Period = period - 1;
+// TIM_TimeBaseInitStructure.TIM_Prescaler = prescaler - 1;
+// TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+// TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+// TIM_TimeBaseInit(Instance, &TIM_TimeBaseInitStructure);
+
+// // Calculate pulse based on duty cycle
+// uint32_t maxValue = (1 << resolution) - 1;
+// uint32_t pulse = (period * value) / maxValue;
+
+// // Configure PWM for the specified channel
+// TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+// TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+// TIM_OCInitStructure.TIM_Pulse = pulse;
+// TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+
+// if (Instance == TIM1 && channel != TIM_Channel_4) {
+//   // TIM1 channels 1-3 have complementary outputs
+//   TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+//   TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+//   TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+//   TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+// }
+
+// // For TIM1, enable PWM outputs
+// if (Instance == TIM1) {
+//   TIM_CtrlPWMOutputs(TIM1, ENABLE);
+// }
+
+// // Initialize appropriate channel
+// if (channel == TIM_Channel_1) {
+//   TIM_OC1Init(Instance, &TIM_OCInitStructure);
+//   TIM_OC1PreloadConfig(Instance, TIM_OCPreload_Enable);
+// } else if (channel == TIM_Channel_2) {
+//   TIM_OC2Init(Instance, &TIM_OCInitStructure);
+//   TIM_OC2PreloadConfig(Instance, TIM_OCPreload_Enable);
+// } else if (channel == TIM_Channel_3) {
+//   TIM_OC3Init(Instance, &TIM_OCInitStructure);
+//   TIM_OC3PreloadConfig(Instance, TIM_OCPreload_Enable);
+// } else if (channel == TIM_Channel_4) {
+//   TIM_OC4Init(Instance, &TIM_OCInitStructure);
+//   TIM_OC4PreloadConfig(Instance, TIM_OCPreload_Enable);
+// }
+
+// // Enable preload
+// TIM_ARRPreloadConfig(Instance, ENABLE);
+
+// // Enable the timer
+// TIM_Cmd(Instance, ENABLE);
+
+// // Store timer information
+// if (timer_idx != 0xFF) {
+//   timer_info[timer_idx].initialized = 1;
+//   timer_info[timer_idx].frequency = PWM_freq;
+//   timer_info[timer_idx].period = period;
+// }
+// }
+
+// Minimalist timer configuration
+typedef struct {
+  uint8_t flags;  // Bit 0-3: initialized flags
+  uint16_t periods[4];
+} TimerCfg_t;
+
+static TimerCfg_t tcfg = {0};
+
+// Function to update PWM duty cycle only
+void pwm_update_duty(PinName pin, uint32_t value, TimerCompareFormat_t resolution) {
+  uint32_t channel = getTimerChannel(pin);
+  TIM_TypeDef *TIMx = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+  uint8_t idx = 0xFF;
+  
+  // Compact timer index lookup
+  #if defined(TIM1_BASE)
+  if (TIMx == TIM1) idx = 0;
+  #endif
+  #if defined(TIM2_BASE)
+  if (TIMx == TIM2) idx = 1;
+  #endif
+  #if defined(TIM3_BASE)
+  if (TIMx == TIM3) idx = 2;
+  #endif
+  #if defined(TIM4_BASE)
+  if (TIMx == TIM4) idx = 3;
+  #endif
+  
+  if (idx == 0xFF || !(tcfg.flags & (1 << idx))) return;
+  
+  // Calculate pulse
+  uint32_t maxValue = (1UL << resolution) - 1;
+  uint32_t pulse = (tcfg.periods[idx] * value) / maxValue;
+  
+  // Direct register access to update compare value
+  switch (channel) {
+    case TIM_Channel_1: TIMx->CH1CVR = pulse; break;
+    case TIM_Channel_2: TIMx->CH2CVR = pulse; break;
+    case TIM_Channel_3: TIMx->CH3CVR = pulse; break;
+    case TIM_Channel_4: TIMx->CH4CVR = pulse; break;
   }
 }
+
+void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution) {
+  if (pin == NC) return;
+  
+  uint32_t channel = getTimerChannel(pin);
+  pinmap_pinout(pin, PinMap_TIM);
+  TIM_TypeDef *TIMx = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
+  
+  // Compact timer index lookup with clock enablement
+  uint8_t idx = 0xFF;
+  #if defined(TIM1_BASE)
+  if (TIMx == TIM1) { 
+    idx = 0; 
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+  }
+  #endif
+  #if defined(TIM2_BASE)
+  if (TIMx == TIM2) { 
+    idx = 1; 
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+  }
+  #endif
+  #if defined(TIM3_BASE)
+  if (TIMx == TIM3) { 
+    idx = 2; 
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+  }
+  #endif
+  #if defined(TIM4_BASE)
+  if (TIMx == TIM4) { 
+    idx = 3; 
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+  }
+  #endif
+  
+  if (idx == 0xFF) return;
+  
+  // Check if already initialized
+  if ((tcfg.flags & (1 << idx))) {
+    static uint32_t last_freq = 0;
+    if (last_freq == PWM_freq) {
+      pwm_update_duty(pin, value, resolution);
+      return;
+    }
+    last_freq = PWM_freq;
+  }
+  
+  // Timer clock calculation
+  RCC_ClocksTypeDef RCC_ClocksStatus;
+  RCC_GetClocksFreq(&RCC_ClocksStatus);
+  uint32_t timerClock = (TIMx == TIM1) ? 
+      ((RCC_ClocksStatus.PCLK2_Frequency < RCC_ClocksStatus.SYSCLK_Frequency) ? 
+      RCC_ClocksStatus.PCLK2_Frequency * 2 : RCC_ClocksStatus.PCLK2_Frequency) : 
+      ((RCC_ClocksStatus.PCLK1_Frequency < RCC_ClocksStatus.SYSCLK_Frequency) ? 
+      RCC_ClocksStatus.PCLK1_Frequency * 2 : RCC_ClocksStatus.PCLK1_Frequency);
+  
+  // Calculate prescaler and period
+  uint16_t prescaler = 1;
+  uint16_t period = timerClock / (PWM_freq * prescaler);
+  
+  while (period > 0xFFFF && prescaler < 0xFFFF) {
+    prescaler++;
+    period = timerClock / (PWM_freq * prescaler);
+  }
+  
+  if (period < 100) {
+    period = 100;
+    prescaler = timerClock / (PWM_freq * period);
+  }
+  
+  // Configure Timer base registers
+  TIMx->ATRLR = period - 1;
+  TIMx->PSC = prescaler - 1;
+  TIMx->CTLR1 |= TIM_ARPE;  // Enable auto-reload preload
+  
+  // Calculate pulse width
+  uint32_t maxValue = (1UL << resolution) - 1;
+  uint32_t pulse = (period * value) / maxValue;
+  
+  // Working registers for channel setup
+  uint16_t tmpccmrx = 0, tmpccer = 0, tmpcr2 = 0;
+  
+  // Channel-specific setup
+  switch (channel) {
+    case TIM_Channel_1:
+      // Disable channel
+      TIMx->CCER &= ~TIM_CC1E;
+      
+      // Configure mode and output
+      tmpccer = TIMx->CCER;
+      tmpcr2 = TIMx->CTLR2;
+      tmpccmrx = TIMx->CHCTLR1;
+      
+      // Clear mode and selection bits
+      tmpccmrx &= ~TIM_OC1M;
+      tmpccmrx &= ~TIM_CC1S;
+      
+      // Set PWM mode
+      tmpccmrx |= TIM_OCMode_PWM1;
+      
+      // Set polarity and enable output
+      tmpccer &= ~TIM_CC1P;
+      tmpccer |= TIM_OCPolarity_High;
+      tmpccer |= TIM_OutputState_Enable;
+      
+      // Setup for TIM1 complementary output
+      if (TIMx == TIM1) {
+        tmpccer &= ~TIM_CC1NP;
+        tmpccer |= TIM_OCNPolarity_High;
+        
+        tmpccer &= ~TIM_CC1NE;
+        tmpccer |= TIM_OutputNState_Enable;
+        
+        tmpcr2 &= ~TIM_OIS1;
+        tmpcr2 &= ~TIM_OIS1N;
+        
+        tmpcr2 |= TIM_OCIdleState_Reset;
+        tmpcr2 |= TIM_OCNIdleState_Reset;
+      }
+      
+      // Write values to registers
+      TIMx->CTLR2 = tmpcr2;
+      TIMx->CHCTLR1 = tmpccmrx;
+      TIMx->CH1CVR = pulse;
+      TIMx->CCER = tmpccer;
+      
+      // Enable preload for this channel
+      TIMx->CHCTLR1 |= TIM_OC1PE;
+      break;
+      
+    case TIM_Channel_2:
+      // Disable channel
+      TIMx->CCER &= ~TIM_CC2E;
+      
+      // Configure mode and output
+      tmpccer = TIMx->CCER;
+      tmpcr2 = TIMx->CTLR2;
+      tmpccmrx = TIMx->CHCTLR1;
+      
+      // Clear mode and selection bits
+      tmpccmrx &= ~TIM_OC2M;
+      tmpccmrx &= ~TIM_CC2S;
+      
+      // Set PWM mode (shifted for channel 2)
+      tmpccmrx |= (TIM_OCMode_PWM1 << 8);
+      
+      // Set polarity and enable output
+      tmpccer &= ~TIM_CC2P;
+      tmpccer |= (TIM_OCPolarity_High << 4);
+      tmpccer |= (TIM_OutputState_Enable << 4);
+      
+      // Setup for TIM1 complementary output
+      if (TIMx == TIM1) {
+        tmpccer &= ~TIM_CC2NP;
+        tmpccer |= (TIM_OCNPolarity_High << 4);
+        
+        tmpccer &= ~TIM_CC2NE;
+        tmpccer |= (TIM_OutputNState_Enable << 4);
+        
+        tmpcr2 &= ~TIM_OIS2;
+        tmpcr2 &= ~TIM_OIS2N;
+        
+        tmpcr2 |= (TIM_OCIdleState_Reset << 2);
+        tmpcr2 |= (TIM_OCNIdleState_Reset << 2);
+      }
+      
+      // Write values to registers
+      TIMx->CTLR2 = tmpcr2;
+      TIMx->CHCTLR1 = tmpccmrx;
+      TIMx->CH2CVR = pulse;
+      TIMx->CCER = tmpccer;
+      
+      // Enable preload for this channel
+      TIMx->CHCTLR1 |= TIM_OC2PE;
+      break;
+      
+    case TIM_Channel_3:
+      // Disable channel
+      TIMx->CCER &= ~TIM_CC3E;
+      
+      // Configure mode and output
+      tmpccer = TIMx->CCER;
+      tmpcr2 = TIMx->CTLR2;
+      tmpccmrx = TIMx->CHCTLR2;
+      
+      // Clear mode and selection bits
+      tmpccmrx &= ~TIM_OC3M;
+      tmpccmrx &= ~TIM_CC3S;
+      
+      // Set PWM mode
+      tmpccmrx |= TIM_OCMode_PWM1;
+      
+      // Set polarity and enable output
+      tmpccer &= ~TIM_CC3P;
+      tmpccer |= (TIM_OCPolarity_High << 8);
+      tmpccer |= (TIM_OutputState_Enable << 8);
+      
+      // Setup for TIM1 complementary output
+      if (TIMx == TIM1) {
+        tmpccer &= ~TIM_CC3NP;
+        tmpccer |= (TIM_OCNPolarity_High << 8);
+        
+        tmpccer &= ~TIM_CC3NE;
+        tmpccer |= (TIM_OutputNState_Enable << 8);
+        
+        tmpcr2 &= ~TIM_OIS3;
+        tmpcr2 &= ~TIM_OIS3N;
+        
+        tmpcr2 |= (TIM_OCIdleState_Reset << 4);
+        tmpcr2 |= (TIM_OCNIdleState_Reset << 4);
+      }
+      
+      // Write values to registers
+      TIMx->CTLR2 = tmpcr2;
+      TIMx->CHCTLR2 = tmpccmrx;
+      TIMx->CH3CVR = pulse;
+      TIMx->CCER = tmpccer;
+      
+      // Enable preload for this channel
+      TIMx->CHCTLR2 |= TIM_OC3PE;
+      break;
+      
+    case TIM_Channel_4:
+      // Disable channel
+      TIMx->CCER &= ~TIM_CC4E;
+      
+      // Configure mode and output
+      tmpccer = TIMx->CCER;
+      tmpcr2 = TIMx->CTLR2;
+      tmpccmrx = TIMx->CHCTLR2;
+      
+      // Clear mode and selection bits
+      tmpccmrx &= ~TIM_OC4M;
+      tmpccmrx &= ~TIM_CC4S;
+      
+      // Set PWM mode (shifted for channel 4)
+      tmpccmrx |= (TIM_OCMode_PWM1 << 8);
+      
+      // Set polarity and enable output
+      tmpccer &= ~TIM_CC4P;
+      tmpccer |= (TIM_OCPolarity_High << 12);
+      tmpccer |= (TIM_OutputState_Enable << 12);
+      
+      // Setup for TIM1 idle state
+      if (TIMx == TIM1) {
+        tmpcr2 &= ~TIM_OIS4;
+        tmpcr2 |= (TIM_OCIdleState_Reset << 6);
+      }
+      
+      // Write values to registers
+      TIMx->CTLR2 = tmpcr2;
+      TIMx->CHCTLR2 = tmpccmrx;
+      TIMx->CH4CVR = pulse;
+      TIMx->CCER = tmpccer;
+      
+      // Enable preload for this channel
+      TIMx->CHCTLR2 |= TIM_OC4PE;
+      break;
+  }
+  
+  // For TIM1, enable main output
+  if (TIMx == TIM1) {
+    TIMx->BDTR |= TIM_MOE;
+  }
+  
+  // Enable timer
+  TIMx->CTLR1 |= TIM_CEN;
+  
+  // Store timer information
+  tcfg.flags |= (1 << idx);
+  tcfg.periods[idx] = period;
+}
+
 /**
   * @brief  This function will disable the PWM
   * @param  port : the gpio port to use
