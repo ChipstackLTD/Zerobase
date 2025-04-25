@@ -106,6 +106,22 @@
   #define PIN_WIRE_SCL2          PC2
 #endif
 
+#ifndef SDA
+  #define SDA                   PIN_WIRE_SDA2
+#endif
+
+#ifndef SCL
+  #define SCL                   PIN_WIRE_SCL2
+#endif
+
+#ifndef MO 
+  #define MO                    PIN_SPI_MOSI
+#endif
+
+#ifndef MI
+  #define MI                    PIN_SPI_MISO
+#endif
+
 // Timer Definitions
 #ifndef TIMER_TONE
   #define TIMER_TONE            TIM2
