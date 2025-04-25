@@ -119,11 +119,140 @@ extern const uint32_t analogInputPin[];
 /* Convert a digital pin number Dxx to a PinName PX_n */
 #if NUM_ANALOG_INPUTS > 0
 /* Note: Analog pin is also a digital pin */
-#define digitalPinToPinName(p)      ((((uint32_t)(p) & PNUM_MASK) < NUM_DIGITAL_PINS) ? \
-            (PinName)(digitalPin[(uint32_t)(p) & PNUM_MASK] | ((p) & ALTX_MASK)) : \
-            (((uint32_t)(p) & PNUM_ANALOG_BASE) == PNUM_ANALOG_BASE) && \
-            (((uint32_t)(p) & PNUM_MASK) < NUM_ANALOG_INTERNAL_FIRST) ? \
-            (PinName)(digitalPin[analogInputPin[(p) & PNUM_ANALOG_INDEX]] | ((p) & ALTX_MASK)) : NC)
+// #define digitalPinToPinName(p)      ((((uint32_t)(p) & PNUM_MASK) < NUM_DIGITAL_PINS) ? \
+//             (PinName)(digitalPin[(uint32_t)(p) & PNUM_MASK] | ((p) & ALTX_MASK)) : \
+//             (((uint32_t)(p) & PNUM_ANALOG_BASE) == PNUM_ANALOG_BASE) && \
+//             (((uint32_t)(p) & PNUM_MASK) < NUM_ANALOG_INTERNAL_FIRST) ? \
+//             (PinName)(digitalPin[analogInputPin[(p) & PNUM_ANALOG_INDEX]] | ((p) & ALTX_MASK)) : NC)
+
+// static inline PinName digitalPinToPinName(uint32_t p) {
+//   const uint32_t pnum = p & PNUM_MASK;
+//   const uint32_t alt  = p & ALTX_MASK;  // Cache common bitmask calculation
+
+//   // Check digital pins
+//   if (pnum < NUM_DIGITAL_PINS) {
+//       return (PinName)(digitalPin[pnum] | alt);
+//   }
+
+//   // Check analog pins
+//   if ((p & PNUM_ANALOG_BASE) == PNUM_ANALOG_BASE) {
+//       const uint32_t analogIndex = p & PNUM_ANALOG_INDEX;
+//       if (analogIndex < NUM_ANALOG_INTERNAL_FIRST) {
+//           return (PinName)(digitalPin[analogInputPin[analogIndex]] | alt);
+//       }
+//   }
+
+//   // Invalid pin
+//   return NC;
+// }
+#ifdef BOARD_ZEROBASE
+static inline PinName getDigitalPin(uint32_t p) {
+  switch (p & PNUM_MASK) {
+      case 0:  return PD_1;
+      case 1:  return PD_0;
+      case 2:  return PC_3;
+      case 3:  return PD_6;
+      case 4:  return PD_3; // For firmware only
+      case 5:  return PD_4; // For firmware only
+      case 6:  return PD_5; // For firmware only
+      case 7:  return NC;
+      case 8:  return NC;
+      case 9:  return NC;
+      case 10: return PC_0;
+      case 11: return PC_6;
+      case 12: return PC_7;
+      case 13: return PC_5;
+      case 14: return PA_2; // A0
+      case 15: return PA_1; // A1
+      case 16: return PC_4; // A2
+      case 17: return PD_2; // A3
+      case 18: return PC_1;
+      case 19: return PC_2;
+      case 20: return NC;
+      case 21: return NC;
+      default: return NC;
+  }
+}
+
+static inline PinName getAnalogPin(uint32_t p) {
+  switch (p & PNUM_ANALOG_INDEX) {
+      case 0: return PA_2; // A0
+      case 1: return PA_1; // A1
+      case 2: return PC_4; // A2
+      case 3: return PD_2; // A3
+      default: return NC;
+  }
+}
+#endif /* BOARD_ZEROBASE */
+
+#ifdef BOARD_ZEROBASE2
+static inline PinName getDigitalPin(uint32_t p) {
+  switch (p & PNUM_MASK) {
+      case 0:  return PA_10;
+      case 1:  return PA_9;
+      case 2:  return PB_6;
+      case 3:  return PB_7;
+      case 4:  return PB_8;
+      case 5:  return PB_9;
+      case 6:  return PB_12;
+      case 7:  return PB_13;
+      case 8:  return PB_14;
+      case 9:  return PB_15;
+      case 10: return PA_15;
+      case 11: return PB_5;
+      case 12: return PB_4;
+      case 13: return PB_3;
+      case 14: return PA_0;   // A0
+      case 15: return PA_1;   // A1
+      case 16: return PA_2;   // A2
+      case 17: return PA_3;   // A3
+      case 18: return PB_11;
+      case 19: return PB_10;
+      case 20: return PA_4;   // A6
+      case 21: return PA_5;   // A7
+      case 22: return PC_14;  // LED
+      case 23: return PA_6;
+      case 24: return PA_7;
+      case 25: return PA_8;
+      case 26: return PA_11;
+      case 27: return PA_12;
+      case 28: return PA_13;
+      case 29: return PA_14;
+      case 30: return PB_0;
+      case 31: return PB_1;
+      case 32: return PB_2;
+      case 33: return PC_13;
+      case 34: return PC_15;
+      case 35: return PD_0;
+      case 36: return PD_1;
+      case 37: return NC;     // Fake pin
+      default: return NC;
+  }
+}
+
+static inline PinName getAnalogPin(uint32_t p) {
+  switch (p & PNUM_ANALOG_INDEX) {
+      case 0: return PA_0; // A0
+      case 1: return PA_1; // A1
+      case 2: return PA_2; // A2
+      case 3: return PA_3; // A3
+      case 6: return PA_4; // A6
+      case 7: return PA_5; // A7
+      default: return NC;  // A4, A5, A8, A9 all NC
+  }
+}
+
+#endif /* BOARD_ZEROBASE2 */
+
+#define digitalPinToPinName(p) \
+((((uint32_t)(p) & PNUM_MASK) < NUM_DIGITAL_PINS) ? \
+  (PinName)(getDigitalPin((p)) | ((p) & ALTX_MASK)) : \
+(((uint32_t)(p) & PNUM_ANALOG_BASE) == PNUM_ANALOG_BASE) && \
+(((uint32_t)(p) & PNUM_MASK) < NUM_ANALOG_INTERNAL_FIRST) ? \
+  (PinName)(getAnalogPin((p)) | ((p) & ALTX_MASK)) : NC)
+
+
+
 #else
 #define digitalPinToPinName(p)      ((((uint32_t)(p) & PNUM_MASK) < NUM_DIGITAL_PINS) ? \
             (PinName)(digitalPin[(uint32_t)(p) & PNUM_MASK] | ((p) & ALTX_MASK)) : NC)
