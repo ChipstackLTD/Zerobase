@@ -18,7 +18,17 @@ int main(void)
     if (FLASH->STATR & (1 << 14))
         NVIC_SystemReset();
     SystemReset_StartMode(Start_Mode_BOOT);
-    pinMode(PD4, OUTPUT);
+    // pinMode(PD4, OUTPUT);
+      // Bật clock cho GPIOD (PDx)
+    RCC->APB2PCENR |= RCC_APB2Periph_GPIOD;
+
+      // Xóa 4 bit cấu hình của pin PD4 (pin 12)
+      // PD4 là pin thứ 4 -> vị trí = 4 * 4 = 16 trong CFGLR
+    GPIOD->CFGLR &= ~(0xF << (4 * 4));     // Xóa cấu hình cũ
+  
+      // Thiết lập: Output push-pull, tốc độ 50MHz -> 0b0011 = 0x3
+    GPIOD->CFGLR |= (0x3 << (4 * 4));      // Đặt cấu hình mới
+  
 #endif
 
 #if defined(USE_TINYUSB)
