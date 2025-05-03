@@ -113,105 +113,238 @@ void i2c_init(i2c_t *obj)
   * @param  ownAddress : device address
   * @retval none
   */
+// void i2c_custom_init(i2c_t *obj, uint32_t timing, uint32_t addressingMode, uint32_t ownAddress)
+// {
+//   if (obj != NULL) 
+//   {
+//     I2C_HandleTypeDef *handle = &(obj->handle);
+//     // Determine the I2C to use
+//     I2C_TypeDef *i2c_sda = pinmap_peripheral(obj->sda, PinMap_I2C_SDA);
+//     I2C_TypeDef *i2c_scl = pinmap_peripheral(obj->scl, PinMap_I2C_SCL);
+
+//     //Pins SDA/SCL must not be NP
+//     if (i2c_sda == NP || i2c_scl == NP) 
+//     {
+//       core_debug("ERROR: at least one I2C pin has no peripheral\n");
+//     } 
+//     else 
+//     {
+
+//       obj->i2c = pinmap_merge_peripheral(i2c_sda, i2c_scl);
+//       if (obj->i2c == NP) 
+//       {
+//         core_debug("ERROR: I2C pins mismatch\n");
+//       } 
+//       else 
+//       {
+// #if defined I2C1_BASE
+//         // Enable I2C1 clock if not done
+//         if (obj->i2c == I2C1) 
+//         {
+//           RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C1, ENABLE);
+//           RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C1, DISABLE);
+//           RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE );
+
+//           obj->irq = I2C1_EV_IRQn;
+//           obj->irqER = I2C1_ER_IRQn;
+//           i2c_handles[I2C1_INDEX] = handle;
+//         }
+// #endif // I2C1_BASE
+// #if defined I2C2_BASE
+//         // Enable I2C2 clock if not done
+//         if (obj->i2c == I2C2) 
+//         {
+//           RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C2, ENABLE);
+//           RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C2, DISABLE);
+//           RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2, ENABLE );
+
+//           obj->irq = I2C2_EV_IRQn;
+//           obj->irqER = I2C2_ER_IRQn;
+//           i2c_handles[I2C2_INDEX] = handle;
+//         }
+// #endif // I2C2_BASE
+
+
+//         /* Configure I2C GPIO pins */
+//         pinmap_pinout(obj->scl, PinMap_I2C_SCL);
+//         pinmap_pinout(obj->sda, PinMap_I2C_SDA);
+
+//         handle->Instance                 = obj->i2c;
+//         handle->Init.I2C_ClockSpeed      = i2c_getTiming(obj, timing);
+//         handle->Init.I2C_Mode            = I2C_Mode_I2C;
+//         /* Standard mode (sm) is up to 100kHz, then it's Fast mode (fm)     */
+//         /* In fast mode duty cyble bit must be set in CCR register          */
+//         if (timing > 100000) 
+//         {
+//           handle->Init.I2C_DutyCycle     = I2C_DutyCycle_16_9;
+//         } 
+//         else 
+//         {
+//           handle->Init.I2C_DutyCycle     = I2C_DutyCycle_2;
+//         }
+//         handle->Init.I2C_OwnAddress1     = ownAddress;
+//         handle->Init.I2C_Ack             = I2C_Ack_Enable;
+//         handle->Init.I2C_AcknowledgedAddress = addressingMode;
+
+// #if OPT_I2C_SLAVE // MMOLE: was 0 (all calls were commented out)
+// 		// MMOLE: enable/setup interrupts. Note: all lines within the if were commented out
+// 		if(obj->isMaster==0)
+// 		{
+//           // MMOLE: Enable I2C interrupts (used value is supported by all CH32's; followed ch32v003fun i2c_slave example by @cnlohr)
+//           obj->i2c->CTLR2 |= I2C_CTLR2_ITBUFEN | I2C_CTLR2_ITEVTEN | I2C_CTLR2_ITERREN;
+		  
+//           /* Interruption is temporarily not supported */ 
+//           //NVIC_SetPriority(obj->irq, I2C_IRQ_PRIO, I2C_IRQ_SUBPRIO);
+//           NVIC_EnableIRQ(obj->irq); // Event interrupt
+
+//           //NVIC_SetPriority(obj->irqER, I2C_IRQ_PRIO, I2C_IRQ_SUBPRIO);
+//           NVIC_EnableIRQ(obj->irqER); // Error interrupt
+// 		}
+// #endif
+
+//         /* Init the I2C */
+//         I2C_Init(obj->i2c, &(handle->Init));
+//         I2C_Cmd(obj->i2c,ENABLE);
+
+//         /* Initialize default values */
+//         //obj->slaveRxNbData = 0;		// MMOLE: was commented
+//         //obj->slaveMode = SLAVE_MODE_LISTEN;		// MMOLE: was commented
+//       }
+//     }
+//   }
+// }
+
 void i2c_custom_init(i2c_t *obj, uint32_t timing, uint32_t addressingMode, uint32_t ownAddress)
 {
-  if (obj != NULL) 
-  {
-    I2C_HandleTypeDef *handle = &(obj->handle);
-    // Determine the I2C to use
-    I2C_TypeDef *i2c_sda = pinmap_peripheral(obj->sda, PinMap_I2C_SDA);
-    I2C_TypeDef *i2c_scl = pinmap_peripheral(obj->scl, PinMap_I2C_SCL);
+  // Early null check
+  if (!obj) return;
 
-    //Pins SDA/SCL must not be NP
-    if (i2c_sda == NP || i2c_scl == NP) 
-    {
-      core_debug("ERROR: at least one I2C pin has no peripheral\n");
-    } 
-    else 
-    {
+  // Get pin assignments
+  PinName sda = obj->sda;
+  PinName scl = obj->scl;
+  
+  // Determine which I2C peripheral to use based on pins
+  I2C_TypeDef *i2c_periph = NULL;
 
-      obj->i2c = pinmap_merge_peripheral(i2c_sda, i2c_scl);
-      if (obj->i2c == NP) 
-      {
-        core_debug("ERROR: I2C pins mismatch\n");
-      } 
-      else 
-      {
-#if defined I2C1_BASE
-        // Enable I2C1 clock if not done
-        if (obj->i2c == I2C1) 
-        {
-          RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C1, ENABLE);
-          RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C1, DISABLE);
-          RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE );
-
-          obj->irq = I2C1_EV_IRQn;
-          obj->irqER = I2C1_ER_IRQn;
-          i2c_handles[I2C1_INDEX] = handle;
-        }
-#endif // I2C1_BASE
-#if defined I2C2_BASE
-        // Enable I2C2 clock if not done
-        if (obj->i2c == I2C2) 
-        {
-          RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C2, ENABLE);
-          RCC_APB1PeriphResetCmd(RCC_APB1Periph_I2C2, DISABLE);
-          RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2, ENABLE );
-
-          obj->irq = I2C2_EV_IRQn;
-          obj->irqER = I2C2_ER_IRQn;
-          i2c_handles[I2C2_INDEX] = handle;
-        }
-#endif // I2C2_BASE
-
-
-        /* Configure I2C GPIO pins */
-        pinmap_pinout(obj->scl, PinMap_I2C_SCL);
-        pinmap_pinout(obj->sda, PinMap_I2C_SDA);
-
-        handle->Instance                 = obj->i2c;
-        handle->Init.I2C_ClockSpeed      = i2c_getTiming(obj, timing);
-        handle->Init.I2C_Mode            = I2C_Mode_I2C;
-        /* Standard mode (sm) is up to 100kHz, then it's Fast mode (fm)     */
-        /* In fast mode duty cyble bit must be set in CCR register          */
-        if (timing > 100000) 
-        {
-          handle->Init.I2C_DutyCycle     = I2C_DutyCycle_16_9;
-        } 
-        else 
-        {
-          handle->Init.I2C_DutyCycle     = I2C_DutyCycle_2;
-        }
-        handle->Init.I2C_OwnAddress1     = ownAddress;
-        handle->Init.I2C_Ack             = I2C_Ack_Enable;
-        handle->Init.I2C_AcknowledgedAddress = addressingMode;
-
-#if OPT_I2C_SLAVE // MMOLE: was 0 (all calls were commented out)
-		// MMOLE: enable/setup interrupts. Note: all lines within the if were commented out
-		if(obj->isMaster==0)
-		{
-          // MMOLE: Enable I2C interrupts (used value is supported by all CH32's; followed ch32v003fun i2c_slave example by @cnlohr)
-          obj->i2c->CTLR2 |= I2C_CTLR2_ITBUFEN | I2C_CTLR2_ITEVTEN | I2C_CTLR2_ITERREN;
-		  
-          /* Interruption is temporarily not supported */ 
-          //NVIC_SetPriority(obj->irq, I2C_IRQ_PRIO, I2C_IRQ_SUBPRIO);
-          NVIC_EnableIRQ(obj->irq); // Event interrupt
-
-          //NVIC_SetPriority(obj->irqER, I2C_IRQ_PRIO, I2C_IRQ_SUBPRIO);
-          NVIC_EnableIRQ(obj->irqER); // Error interrupt
-		}
-#endif
-
-        /* Init the I2C */
-        I2C_Init(obj->i2c, &(handle->Init));
-        I2C_Cmd(obj->i2c,ENABLE);
-
-        /* Initialize default values */
-        //obj->slaveRxNbData = 0;		// MMOLE: was commented
-        //obj->slaveMode = SLAVE_MODE_LISTEN;		// MMOLE: was commented
-      }
-    }
+#ifdef BOARD_ZEROBASE2
+  // ZEROBASE2 board: I2C1(PB7/PB6) or I2C2(PB11/PB10)
+  if (sda == PB_7 && scl == PB_6) {  // Fixed: Use proper pin names instead of numeric values
+    #if defined I2C1_BASE
+    i2c_periph = I2C1;
+    #endif
   }
+  #if defined I2C2_BASE
+  else if (sda == PB_11 && scl == PB_10) {
+    i2c_periph = I2C2;
+  }
+  #endif
+#elif defined(BOARD_ZEROBASE)
+  // ZEROBASE board (Ch32V00): I2C1(PC1/PC2)
+  if (sda == PC_1 && scl == PC_2) {  // D18(PC1) and D19(PC2)
+    #if defined I2C1_BASE
+    i2c_periph = I2C1;
+    #endif
+  }
+#endif
+  
+  // If invalid pin combination, exit early
+  if (!i2c_periph) return;
+  
+  // Store peripheral reference
+  obj->i2c = i2c_periph;
+  obj->handle.Instance = i2c_periph;
+  
+  // Configure the peripheral based on which one we're using
+#if defined I2C1_BASE
+  if (i2c_periph == I2C1) {
+    // Enable reset, then disable reset (atomic operations)
+    // RCC_APB1Periph_I2C1 is 0x00200000
+    RCC->APB1PRSTR |= 0x00200000;  // Set reset bit for I2C1
+    RCC->APB1PRSTR &= ~0x00200000; // Clear reset bit for I2C1
+    // Enable clock
+    RCC->APB1PCENR |= 0x00200000;  // Enable I2C1 clock
+    
+    obj->irq = I2C1_EV_IRQn;
+    obj->irqER = I2C1_ER_IRQn;
+    i2c_handles[I2C1_INDEX] = &(obj->handle);
+  }
+#endif
+  
+#if defined I2C2_BASE
+  if (i2c_periph == I2C2) {
+    // Enable reset, then disable reset (atomic operations)
+    // RCC_APB1Periph_I2C2 is 0x00400000
+    RCC->APB1PRSTR |= 0x00400000;  // Set reset bit for I2C2
+    RCC->APB1PRSTR &= ~0x00400000; // Clear reset bit for I2C2
+    // Enable clock
+    RCC->APB1PCENR |= 0x00400000;  // Enable I2C2 clock
+    
+    obj->irq = I2C2_EV_IRQn;
+    obj->irqER = I2C2_ER_IRQn;
+    i2c_handles[I2C2_INDEX] = &(obj->handle);
+  }
+#endif
+  
+  // Configure GPIO pins based on board
+#ifdef BOARD_ZEROBASE2
+  if (i2c_periph == I2C1 || i2c_periph == I2C2) {
+    // Both I2C1 and I2C2 use GPIOB on ZEROBASE2
+    // Enable GPIOB clock (RCC_APB2Periph_GPIOB = 0x00000008)
+    RCC->APB2PCENR |= 0x00000008;
+    
+    // Configure pins
+    GPIO_TypeDef *GPIOB_ptr = GPIOB;
+    
+    if (i2c_periph == I2C1) {
+      // PB6 (SCL) and PB7 (SDA) for I2C1
+      // GPIO_Mode_AF_OD = 0xD, GPIO_Speed_50MHz = 0x3, Combined = 0xF
+      
+      // Clear and set config bits for pins 6 and 7
+      GPIOB_ptr->CFGLR &= ~(0xFF << (6 * 4)); // Clear bits for pins 6 and 7
+      GPIOB_ptr->CFGLR |= (0xF << (6 * 4));   // Set pin 6 (SCL)
+      GPIOB_ptr->CFGLR |= (0xF << (7 * 4));   // Set pin 7 (SDA)
+    }
+    #if defined I2C2_BASE
+    else if (i2c_periph == I2C2) {
+      // PB10 (SCL) and PB11 (SDA) for I2C2
+      // GPIO_Mode_AF_OD = 0xD, GPIO_Speed_50MHz = 0x3, Combined = 0xF
+      
+      // High pins (8-15) use CFGHR register
+      GPIOB_ptr->CFGHR &= ~(0xFF << ((10-8) * 4)); // Clear bits for pins 10 and 11
+      GPIOB_ptr->CFGHR |= (0xF << ((10-8) * 4));   // Set pin 10 (SCL)
+      GPIOB_ptr->CFGHR |= (0xF << ((11-8) * 4));   // Set pin 11 (SDA)
+    }
+    #endif
+  }
+#elif defined(BOARD_ZEROBASE)
+  // Enable GPIOC clock (RCC_APB2Periph_GPIOC = 0x00000010)
+  RCC->APB2PCENR |= 0x00000010;
+  
+  // Configure PC1 (SDA) and PC2 (SCL) for I2C1
+  GPIO_TypeDef *GPIOC_ptr = GPIOC;
+  
+  // GPIO_Mode_AF_OD = 0xD, GPIO_Speed_50MHz = 0x3, Combined = 0xF
+  GPIOC_ptr->CFGLR &= ~(0xFF << (1 * 4)); // Clear bits for pins 1 and 2
+  GPIOC_ptr->CFGLR |= (0xF << (1 * 4));   // Set pin 1 (SDA)
+  GPIOC_ptr->CFGLR |= (0xF << (2 * 4));   // Set pin 2 (SCL)
+#endif
+  
+  // Cap timing at 400kHz for Fast I2C mode
+  if (timing > 400000) timing = 400000;
+  
+  // Setup I2C parameters
+  obj->handle.Init.I2C_ClockSpeed = timing;
+  obj->handle.Init.I2C_Mode = I2C_Mode_I2C;
+  obj->handle.Init.I2C_DutyCycle = (timing > 100000) ? I2C_DutyCycle_16_9 : I2C_DutyCycle_2;
+  obj->handle.Init.I2C_OwnAddress1 = ownAddress;
+  obj->handle.Init.I2C_Ack = I2C_Ack_Enable;
+  obj->handle.Init.I2C_AcknowledgedAddress = addressingMode;
+  
+  // Initialize I2C - this is hardware specific
+  I2C_Init(i2c_periph, &(obj->handle.Init));
+  
+  // Enable I2C (PE bit is bit 0 of CTLR1)
+  i2c_periph->CTLR1 |= 0x0001;
 }
 
 /**
