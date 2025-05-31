@@ -9,7 +9,8 @@
 
 uint32_t z1 = 0;
 uint32_t z2 = 0;
- 
+#define ESP_RST_PIN 5    // RST pin connection
+#define ESP_GPIO0_PIN 4  // GPIO0 pin connection
 int main(void)
 {
     pre_init();
@@ -53,6 +54,18 @@ if ((uint16_t)(*(__IO uint16_t *)0x1FFFF806) != (uint16_t)(((~((c >> 8) & 0xFF) 
     (uint16_t)(*(__IO uint16_t *)0x1FFFF804) != (uint16_t)(((~(c & 0xFF) << 8) | (c & 0xFF)))) {
     *(volatile uint32_t*)0xE000E048 = 0xBEEF0000 | (1 << 7);
 }
+
+  pinMode(ESP_RST_PIN, OUTPUT);
+  pinMode(ESP_GPIO0_PIN, OUTPUT);
+  // Reset sequence for normal operation
+  digitalWrite(ESP_GPIO0_PIN, HIGH);  // Set GPIO0 high for normal boot
+  delay(100);
+
+  digitalWrite(ESP_RST_PIN, LOW);  // Assert reset
+  delay(100);                       // Hold in reset
+
+  digitalWrite(ESP_RST_PIN, HIGH);  // Release reset
+  delay(100);                        // Give ESP time to boot
 
   setup();
 
