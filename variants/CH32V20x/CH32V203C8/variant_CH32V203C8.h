@@ -223,10 +223,22 @@
   #define PIN_SERIAL3_TX PB10 // D19
 #endif
 
+#ifdef BOARD_ZEROBASE2W
+#ifndef PIN_SERIAL4_RX
+  #define PIN_SERIAL4_RX PB1
+#endif
+#ifndef PIN_SERIAL4_TX
+  #define PIN_SERIAL4_TX PB0
+#endif
+#endif
+
 // Enable Serial2 and Serial3 instances
 #define HAVE_HWSERIAL1
 #define HAVE_HWSERIAL2
 #define HAVE_HWSERIAL3
+#ifdef BOARD_ZEROBASE2W
+#define HAVE_HWSERIAL4
+#endif
 /*----------------------------------------------------------------------------
  *        Arduino objects - C++ only
  *----------------------------------------------------------------------------*/

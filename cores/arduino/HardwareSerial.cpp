@@ -46,13 +46,18 @@ HardwareSerial::HardwareSerial(void *peripheral)
     setRx(PIN_SERIAL2_RX); // PA3 (Serial2 RX)
     setTx(PIN_SERIAL2_TX); // PA2 (Serial2 TX)
   }
-
-
   else if (peripheral == USART3)
   {
     setRx(PIN_SERIAL3_RX); // PB11 (Serial3 RX)
     setTx(PIN_SERIAL3_TX); // PB10 (Serial3 TX)
   }
+  #ifdef BOARD_ZEROBASE2W
+  else if (peripheral == UART4)
+  {
+    setRx(PIN_SERIAL4_RX); // PC11 (Serial4 RX)
+    setTx(PIN_SERIAL4_TX); // PC10 (Serial4 TX)
+  }
+  #endif
 #endif
 
 #ifdef BOARD_ZEROBASE
@@ -130,6 +135,23 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
       USART_ClearITPendingBit(USART3, USART_IT_RXNE);
       HardwareSerial *obj=&Serial3; 
       obj->_rx_buffer[obj->_rx_buffer_head] = USART_ReceiveData(USART3);    // maybe we should use uart_getc()?
+      obj->_rx_buffer_head++;
+      obj->_rx_buffer_head %= SERIAL_RX_BUFFER_SIZE;
+    }
+  #ifdef __cplusplus
+  }
+  #endif
+#endif
+
+#if defined(UART4)
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
+    void UART4_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void UART4_IRQHandler(void) {
+      USART_ClearITPendingBit(UART4, USART_IT_RXNE);
+      HardwareSerial *obj=&Serial4; 
+      obj->_rx_buffer[obj->_rx_buffer_head] = USART_ReceiveData(UART4);    // maybe we should use uart_getc()?
       obj->_rx_buffer_head++;
       obj->_rx_buffer_head %= SERIAL_RX_BUFFER_SIZE;
     }
@@ -240,6 +262,12 @@ void HardwareSerial::begin(unsigned long baud, byte config)
     USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
     NVIC_SetPriority(USART3_IRQn, UART_IRQ_PRIO);
     NVIC_EnableIRQ(USART3_IRQn);
+  #endif
+
+  #if defined(UART4)
+    USART_ITConfig(UART4, USART_IT_RXNE, ENABLE);
+    NVIC_SetPriority(UART4_IRQn, UART_IRQ_PRIO);
+    NVIC_EnableIRQ(UART4_IRQn);
   #endif
   
   // Enable RTS/CTS hardware flow control if RTS and CTS pins are defined

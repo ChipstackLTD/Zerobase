@@ -29,6 +29,7 @@
 #define OPT_USART1_INT 1
 #define OPT_USART2_INT 1
 #define OPT_USART3_INT 1
+#define OPT_UART4_INT 1
 
 #if 1
 

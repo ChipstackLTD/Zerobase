@@ -253,14 +253,14 @@ ZEROBASE_2.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
 ZEROBASE_2W.name=Zerobase 2W
 ZEROBASE_2W.build.core=arduino
 ZEROBASE_2W.build.board=ZEROBASE_2W
-ZEROBASE_2W.build.extra_flags=-D BOARD_ZEROBASE2W
+ZEROBASE_2W.build.extra_flags=-D BOARD_ZEROBASE2W -D BOARD_ZEROBASE2
 ZEROBASE_2W.upload.maximum_size=0
 ZEROBASE_2W.upload.maximum_data_size=0
 ZEROBASE_2W.build.variant_h=variant_{build.board}.h
 ZEROBASE_2W.debug.tool=gdb-WCH_LinkE
 
 #ZEROBASE_2W Board
-ZEROBASE_2W.menu.pnum.CH32V203C8=ZEROBASE 2
+ZEROBASE_2W.menu.pnum.CH32V203C8=ZEROBASE 2W
 ZEROBASE_2W.menu.pnum.CH32V203C8.node=NODE_V203C8
 ZEROBASE_2W.menu.pnum.CH32V203C8.upload.maximum_size=65536
 ZEROBASE_2W.menu.pnum.CH32V203C8.upload.maximum_data_size=20480
