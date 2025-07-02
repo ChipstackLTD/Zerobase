@@ -143,7 +143,7 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
   #endif
 #endif
 
-#if defined(UART4)
+#if defined(HAVE_HWSERIAL4) && defined(UART4)
   #ifdef __cplusplus
   extern "C" {
   #endif
@@ -264,7 +264,7 @@ void HardwareSerial::begin(unsigned long baud, byte config)
     NVIC_EnableIRQ(USART3_IRQn);
   #endif
 
-  #if defined(UART4)
+  #if defined(HAVE_HWSERIAL4) && defined(UART4)
     USART_ITConfig(UART4, USART_IT_RXNE, ENABLE);
     NVIC_SetPriority(UART4_IRQn, UART_IRQ_PRIO);
     NVIC_EnableIRQ(UART4_IRQn);
