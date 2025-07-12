@@ -91,7 +91,7 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
   #ifdef __cplusplus
   extern "C" {
   #endif
-    void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void USART1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast"))) __attribute__((used));
     void USART1_IRQHandler(void) {
       USART_ClearITPendingBit(USART1, USART_IT_RXNE);
       // Use the proper serial object to fill the RX buffer. Perhaps we should use uart_handlers[] as defined in uart.c
@@ -111,7 +111,7 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
   #ifdef __cplusplus
   extern "C" {
   #endif
-    void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast"))); __attribute__((used));
     void USART2_IRQHandler(void) {
       USART_ClearITPendingBit(USART2, USART_IT_RXNE);
       HardwareSerial *obj=&Serial2; 
@@ -130,7 +130,7 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
   #ifdef __cplusplus
   extern "C" {
   #endif
-    void USART3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void USART3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast"))); __attribute__((used));
     void USART3_IRQHandler(void) {
       USART_ClearITPendingBit(USART3, USART_IT_RXNE);
       HardwareSerial *obj=&Serial3; 
@@ -147,7 +147,7 @@ void HardwareSerial::init(PinName _rx, PinName _tx, PinName _rts, PinName _cts, 
   #ifdef __cplusplus
   extern "C" {
   #endif
-    void UART4_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+    void UART4_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast"))); __attribute__((used));
     void UART4_IRQHandler(void) {
       USART_ClearITPendingBit(UART4, USART_IT_RXNE);
       HardwareSerial *obj=&Serial4; 
