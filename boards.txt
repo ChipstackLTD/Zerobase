@@ -74,10 +74,10 @@ ZEROBASE.menu.clock.8MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_8MHz_HSE=8000000 -D
 
 
 # Optimizations
-ZEROBASE.menu.opt.osstd=Smallest (-Os default)
-ZEROBASE.menu.opt.osstd.build.flags.optimize=-Os
 ZEROBASE.menu.opt.oslto=Smallest (-Os) with LTO
 ZEROBASE.menu.opt.oslto.build.flags.optimize=-Os -flto
+ZEROBASE.menu.opt.osstd=Smallest (-Os)
+ZEROBASE.menu.opt.osstd.build.flags.optimize=-Os
 ZEROBASE.menu.opt.o1std=Fast (-O1)
 ZEROBASE.menu.opt.o1std.build.flags.optimize=-O1
 ZEROBASE.menu.opt.o1lto=Fast (-O1) with LTO
@@ -202,10 +202,10 @@ ZEROBASE_2.menu.clock.HSE.build.flags.clock=-DSYSCLK_FREQ_HSE=HSE_VALUE -DF_CPU=
 
 
 # Optimizations
-ZEROBASE_2.menu.opt.osstd=Smallest (-Os default)
-ZEROBASE_2.menu.opt.osstd.build.flags.optimize=-Os
 ZEROBASE_2.menu.opt.oslto=Smallest (-Os) with LTO
 ZEROBASE_2.menu.opt.oslto.build.flags.optimize=-Os -flto
+ZEROBASE_2.menu.opt.osstd=Smallest (-Os)
+ZEROBASE_2.menu.opt.osstd.build.flags.optimize=-Os
 ZEROBASE_2.menu.opt.o1std=Fast (-O1)
 ZEROBASE_2.menu.opt.o1std.build.flags.optimize=-O1
 ZEROBASE_2.menu.opt.o1lto=Fast (-O1) with LTO
@@ -323,10 +323,10 @@ ZEROBASE_2W.menu.clock.HSE.build.flags.clock=-DSYSCLK_FREQ_HSE=HSE_VALUE -DF_CPU
 
 
 # Optimizations
-ZEROBASE_2W.menu.opt.osstd=Smallest (-Os default)
-ZEROBASE_2W.menu.opt.osstd.build.flags.optimize=-Os
 ZEROBASE_2W.menu.opt.oslto=Smallest (-Os) with LTO
 ZEROBASE_2W.menu.opt.oslto.build.flags.optimize=-Os -flto
+ZEROBASE_2W.menu.opt.osstd=Smallest (-Os)
+ZEROBASE_2W.menu.opt.osstd.build.flags.optimize=-Os
 ZEROBASE_2W.menu.opt.o1std=Fast (-O1)
 ZEROBASE_2W.menu.opt.o1std.build.flags.optimize=-O1
 ZEROBASE_2W.menu.opt.o1lto=Fast (-O1) with LTO
