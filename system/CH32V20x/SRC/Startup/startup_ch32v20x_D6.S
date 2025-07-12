@@ -104,7 +104,7 @@ _vector_base:
     .weak   Ecall_M_Mode_Handler       /* Ecall M Mode */
     .weak   Ecall_U_Mode_Handler       /* Ecall U Mode */
     .weak   Break_Point_Handler        /* Break Point */
-    .weak   SysTick_Handler            /* SysTick */
+    .global   SysTick_Handler            /* SysTick */
     .weak   SW_Handler                 /* SW */
     .weak   WWDG_IRQHandler            /* Window Watchdog */
     .weak   PVD_IRQHandler             /* PVD through EXTI Line detect */
@@ -112,11 +112,11 @@ _vector_base:
     .weak   RTC_IRQHandler             /* RTC */
     .weak   FLASH_IRQHandler           /* Flash */
     .weak   RCC_IRQHandler             /* RCC */
-    .weak   EXTI0_IRQHandler           /* EXTI Line 0 */
-    .weak   EXTI1_IRQHandler           /* EXTI Line 1 */
-    .weak   EXTI2_IRQHandler           /* EXTI Line 2 */
-    .weak   EXTI3_IRQHandler           /* EXTI Line 3 */
-    .weak   EXTI4_IRQHandler           /* EXTI Line 4 */
+    .global   EXTI0_IRQHandler           /* EXTI Line 0 */
+    .global   EXTI1_IRQHandler           /* EXTI Line 1 */
+    .global   EXTI2_IRQHandler           /* EXTI Line 2 */
+    .global   EXTI3_IRQHandler           /* EXTI Line 3 */
+    .global   EXTI4_IRQHandler           /* EXTI Line 4 */
     .weak   DMA1_Channel1_IRQHandler   /* DMA1 Channel 1 */
     .weak   DMA1_Channel2_IRQHandler   /* DMA1 Channel 2 */
     .weak   DMA1_Channel3_IRQHandler   /* DMA1 Channel 3 */
@@ -129,24 +129,24 @@ _vector_base:
     .weak   USB_LP_CAN1_RX0_IRQHandler /* USB LP and CAN1RX0 */
     .weak   CAN1_RX1_IRQHandler        /* CAN1 RX1 */
     .weak   CAN1_SCE_IRQHandler        /* CAN1 SCE */
-    .weak   EXTI9_5_IRQHandler         /* EXTI Line 9..5 */
-    .weak   TIM1_BRK_IRQHandler        /* TIM1 Break */
-    .weak   TIM1_UP_IRQHandler         /* TIM1 Update */
-    .weak   TIM1_TRG_COM_IRQHandler    /* TIM1 Trigger and Commutation */
-    .weak   TIM1_CC_IRQHandler         /* TIM1 Capture Compare */
-    .weak   TIM2_IRQHandler            /* TIM2 */
-    .weak   TIM3_IRQHandler            /* TIM3 */
-    .weak   TIM4_IRQHandler            /* TIM4 */
+    .global   EXTI9_5_IRQHandler         /* EXTI Line 9..5 */
+    .global   TIM1_BRK_IRQHandler        /* TIM1 Break */
+    .global   TIM1_UP_IRQHandler         /* TIM1 Update */
+    .global   TIM1_TRG_COM_IRQHandler    /* TIM1 Trigger and Commutation */
+    .global   TIM1_CC_IRQHandler         /* TIM1 Capture Compare */
+    .global   TIM2_IRQHandler            /* TIM2 */
+    .global   TIM3_IRQHandler            /* TIM3 */
+    .global   TIM4_IRQHandler            /* TIM4 */
     .weak   I2C1_EV_IRQHandler         /* I2C1 Event */
     .weak   I2C1_ER_IRQHandler         /* I2C1 Error */
     .weak   I2C2_EV_IRQHandler         /* I2C2 Event */
     .weak   I2C2_ER_IRQHandler         /* I2C2 Error */
     .weak   SPI1_IRQHandler            /* SPI1 */
     .weak   SPI2_IRQHandler            /* SPI2 */
-    .weak   USART1_IRQHandler          /* USART1 */
-    .weak   USART2_IRQHandler          /* USART2 */
-    .weak   USART3_IRQHandler          /* USART3 */
-    .weak   EXTI15_10_IRQHandler       /* EXTI Line 15..10 */
+    .global   USART1_IRQHandler          /* USART1 */
+    .global   USART2_IRQHandler          /* USART2 */
+    .global   USART3_IRQHandler          /* USART3 */
+    .global   EXTI15_10_IRQHandler       /* EXTI Line 15..10 */
     .weak   RTCAlarm_IRQHandler        /* RTC Alarm through EXTI Line */
     .weak   USBWakeUp_IRQHandler       /* USB Wakeup from suspend */
     .weak   USBHD_IRQHandler           /* USBHD */
@@ -159,7 +159,6 @@ HardFault_Handler:  1:  j 1b
 Ecall_M_Mode_Handler:  1:  j 1b
 Ecall_U_Mode_Handler:  1:  j 1b
 Break_Point_Handler:  1:  j 1b
-SysTick_Handler:  1:  j 1b
 SW_Handler:  1:  j 1b
 WWDG_IRQHandler:  1:  j 1b
 PVD_IRQHandler:  1:  j 1b
@@ -167,11 +166,6 @@ TAMPER_IRQHandler:  1:  j 1b
 RTC_IRQHandler:  1:  j 1b
 FLASH_IRQHandler:  1:  j 1b
 RCC_IRQHandler:  1:  j 1b
-EXTI0_IRQHandler:  1:  j 1b
-EXTI1_IRQHandler:  1:  j 1b
-EXTI2_IRQHandler:  1:  j 1b
-EXTI3_IRQHandler:  1:  j 1b
-EXTI4_IRQHandler:  1:  j 1b
 DMA1_Channel1_IRQHandler:  1:  j 1b
 DMA1_Channel2_IRQHandler:  1:  j 1b
 DMA1_Channel3_IRQHandler:  1:  j 1b
@@ -180,28 +174,15 @@ DMA1_Channel5_IRQHandler:  1:  j 1b
 DMA1_Channel6_IRQHandler:  1:  j 1b
 DMA1_Channel7_IRQHandler:  1:  j 1b
 ADC1_2_IRQHandler:  1:  j 1b
-USB_HP_CAN1_TX_IRQHandler:  1:  j 1b
-USB_LP_CAN1_RX0_IRQHandler:  1:  j 1b
-CAN1_RX1_IRQHandler:  1:  j 1b
 CAN1_SCE_IRQHandler:  1:  j 1b
-EXTI9_5_IRQHandler:  1:  j 1b
 TIM1_BRK_IRQHandler:  1:  j 1b
-TIM1_UP_IRQHandler:  1:  j 1b
 TIM1_TRG_COM_IRQHandler:  1:  j 1b
-TIM1_CC_IRQHandler:  1:  j 1b
-TIM2_IRQHandler:  1:  j 1b
-TIM3_IRQHandler:  1:  j 1b
-TIM4_IRQHandler:  1:  j 1b
 I2C1_EV_IRQHandler:  1:  j 1b
 I2C1_ER_IRQHandler:  1:  j 1b
 I2C2_EV_IRQHandler:  1:  j 1b
 I2C2_ER_IRQHandler:  1:  j 1b
 SPI1_IRQHandler:  1:  j 1b
 SPI2_IRQHandler:  1:  j 1b
-USART1_IRQHandler:  1:  j 1b
-USART2_IRQHandler:  1:  j 1b
-USART3_IRQHandler:  1:  j 1b
-EXTI15_10_IRQHandler:  1:  j 1b
 RTCAlarm_IRQHandler:  1:  j 1b
 USBWakeUp_IRQHandler:  1:  j 1b
 USBHD_IRQHandler:  1:  j 1b

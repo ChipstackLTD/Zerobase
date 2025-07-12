@@ -60,13 +60,13 @@ _start:
 	.section  .text.vector_handler, "ax", @progbits
 	.weak   NMI_Handler
 	.weak   HardFault_Handler
-	.weak   SysTick_Handler
+	.global SysTick_Handler
 	.weak   SW_Handler
 	.weak   WWDG_IRQHandler
 	.weak   PVD_IRQHandler
 	.weak   FLASH_IRQHandler
 	.weak   RCC_IRQHandler
-	.weak   EXTI7_0_IRQHandler
+	.global EXTI7_0_IRQHandler
 	.weak   AWU_IRQHandler
 	.weak   DMA1_Channel1_IRQHandler
 	.weak   DMA1_Channel2_IRQHandler
@@ -78,23 +78,21 @@ _start:
 	.weak   ADC1_IRQHandler
 	.weak   I2C1_EV_IRQHandler
 	.weak   I2C1_ER_IRQHandler
-	.weak   USART1_IRQHandler
+	.global   USART1_IRQHandler
 	.weak   SPI1_IRQHandler
-	.weak   TIM1_BRK_IRQHandler
-	.weak   TIM1_UP_IRQHandler
-	.weak   TIM1_TRG_COM_IRQHandler
-	.weak   TIM1_CC_IRQHandler
-	.weak   TIM2_IRQHandler
+	.global   TIM1_BRK_IRQHandler
+	.global   TIM1_UP_IRQHandler
+	.global   TIM1_TRG_COM_IRQHandler
+	.global   TIM1_CC_IRQHandler
+	.global   TIM2_IRQHandler
 
 NMI_Handler:              1: j 1b
 HardFault_Handler:        1: j 1b
-SysTick_Handler:          1: j 1b
 SW_Handler:               1: j 1b
 WWDG_IRQHandler:          1: j 1b
 PVD_IRQHandler:           1: j 1b
 FLASH_IRQHandler:         1: j 1b
 RCC_IRQHandler:           1: j 1b
-EXTI7_0_IRQHandler:       1: j 1b
 AWU_IRQHandler:           1: j 1b
 DMA1_Channel1_IRQHandler: 1: j 1b
 DMA1_Channel2_IRQHandler: 1: j 1b
@@ -106,13 +104,9 @@ DMA1_Channel7_IRQHandler: 1: j 1b
 ADC1_IRQHandler:          1: j 1b
 I2C1_EV_IRQHandler:       1: j 1b
 I2C1_ER_IRQHandler:       1: j 1b
-USART1_IRQHandler:        1: j 1b
 SPI1_IRQHandler:          1: j 1b
 TIM1_BRK_IRQHandler:      1: j 1b
-TIM1_UP_IRQHandler:       1: j 1b
 TIM1_TRG_COM_IRQHandler:  1: j 1b
-TIM1_CC_IRQHandler:       1: j 1b
-TIM2_IRQHandler:          1: j 1b
 
 
 	.section  .text.handle_reset, "ax", @progbits

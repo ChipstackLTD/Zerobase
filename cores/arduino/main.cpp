@@ -11,6 +11,10 @@ uint32_t z1 = 0;
 uint32_t z2 = 0;
 #define ESP_RST_PIN 5    // RST pin connection
 #define ESP_GPIO0_PIN 4  // GPIO0 pin connection
+
+extern void setup(void) __attribute__((used));
+extern void loop(void) __attribute__((used));
+
 int main(void)
 {
     pre_init();
