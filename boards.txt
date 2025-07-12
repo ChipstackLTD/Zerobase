@@ -367,3 +367,115 @@ ZEROBASE_2W.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 ZEROBASE_2W.menu.rtlib.nanofps.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _printf_float -u _scanf_float
 ZEROBASE_2W.menu.rtlib.full=Newlib Standard
 ZEROBASE_2W.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
+
+##############################################################################
+##ZEROBASE_CORE Board   
+
+ZEROBASE_CORE.name=Zerobase Core
+ZEROBASE_CORE.build.core=arduino
+ZEROBASE_CORE.build.board=ZEROBASE_CORE
+ZEROBASE_CORE.build.extra_flags=-D BOARD_ZEROBASE {build.flags.i2cslave}
+ZEROBASE_CORE.upload.maximum_size=0
+ZEROBASE_CORE.upload.maximum_data_size=0
+ZEROBASE_CORE.build.variant_h=variant_{build.board}.h
+ZEROBASE_CORE.debug.tool=gdb-WCH_LinkE
+
+
+#ZEROBASE_CORE Board
+ZEROBASE_CORE.menu.pnum.CH32V003F4=Zerobase_CORE
+ZEROBASE_CORE.menu.pnum.CH32V003F4.node=NODE_V003F4
+ZEROBASE_CORE.menu.pnum.CH32V003F4.upload.maximum_size=16384
+ZEROBASE_CORE.menu.pnum.CH32V003F4.upload.maximum_data_size=2048
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.mcu=QingKe-V2A
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.board=CH32V003F4
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.series=CH32V00x
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.variant=CH32V00x/CH32V003F4
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.chip=CH32V003F4
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.march=rv32ecxw
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.mabi=ilp32e
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.math_lib_gcc=-lm
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.IQ_math_RV32=
+ZEROBASE_CORE.menu.pnum.CH32V003F4.build.ch_extra_lib=-lprintf
+
+
+# Upload menu
+ZEROBASE_CORE.menu.upload_method.minichlink=minichlink
+ZEROBASE_CORE.menu.upload_method.minichlink.upload.protocol=
+ZEROBASE_CORE.menu.upload_method.minichlink.upload.options=
+ZEROBASE_CORE.menu.upload_method.minichlink.upload.tool=minichlink
+#ZEROBASE_CORE.menu.upload_method.swdMethod=WCH-SWD
+#ZEROBASE_CORE.menu.upload_method.swdMethod.upload.protocol=
+#ZEROBASE_CORE.menu.upload_method.swdMethod.upload.options=
+#ZEROBASE_CORE.menu.upload_method.swdMethod.upload.tool=WCH_linkE
+#ZEROBASE_CORE.menu.upload_method.ispMethod=WCH-ISP
+#ZEROBASE_CORE.menu.upload_method.ispMethod.upload.protocol=
+#ZEROBASE_CORE.menu.upload_method.ispMethod.upload.options=
+#ZEROBASE_CORE.menu.upload_method.ispMethod.upload.tool=wchisp
+
+
+# Clock Select
+ZEROBASE_CORE.menu.clock.48MHz_HSI=48MHz Internal
+ZEROBASE_CORE.menu.clock.48MHz_HSI.build.flags.clock=-DSYSCLK_FREQ_48MHz_HSI=48000000 -DF_CPU=48000000
+ZEROBASE_CORE.menu.clock.24MHz_HSI=24MHz Internal
+ZEROBASE_CORE.menu.clock.24MHz_HSI.build.flags.clock=-DSYSCLK_FREQ_24MHz_HSI=24000000 -DF_CPU=24000000
+ZEROBASE_CORE.menu.clock.8MHz_HSI=8MHz Internal
+ZEROBASE_CORE.menu.clock.8MHz_HSI.build.flags.clock=-DSYSCLK_FREQ_8MHz_HSI=8000000 -DF_CPU=8000000
+ZEROBASE_CORE.menu.clock.48MHz_HSE=48MHz External
+ZEROBASE_CORE.menu.clock.48MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_48MHz_HSE=48000000 -DF_CPU=48000000
+ZEROBASE_CORE.menu.clock.24MHz_HSE=24MHz External
+ZEROBASE_CORE.menu.clock.24MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_24MHz_HSE=24000000 -DF_CPU=24000000
+ZEROBASE_CORE.menu.clock.8MHz_HSE=8MHz External
+ZEROBASE_CORE.menu.clock.8MHz_HSE.build.flags.clock=-DSYSCLK_FREQ_8MHz_HSE=8000000 -DF_CPU=8000000
+
+
+# Optimizations
+ZEROBASE_CORE.menu.opt.oslto=Smallest (-Os) with LTO
+ZEROBASE_CORE.menu.opt.oslto.build.flags.optimize=-Os -flto
+ZEROBASE_CORE.menu.opt.osstd=Smallest (-Os)
+ZEROBASE_CORE.menu.opt.osstd.build.flags.optimize=-Os
+ZEROBASE_CORE.menu.opt.o1std=Fast (-O1)
+ZEROBASE_CORE.menu.opt.o1std.build.flags.optimize=-O1
+ZEROBASE_CORE.menu.opt.o1lto=Fast (-O1) with LTO
+ZEROBASE_CORE.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+ZEROBASE_CORE.menu.opt.o2std=Faster (-O2)
+ZEROBASE_CORE.menu.opt.o2std.build.flags.optimize=-O2
+ZEROBASE_CORE.menu.opt.o2lto=Faster (-O2) with LTO
+ZEROBASE_CORE.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+ZEROBASE_CORE.menu.opt.o3std=Fastest (-O3)
+ZEROBASE_CORE.menu.opt.o3std.build.flags.optimize=-O3
+ZEROBASE_CORE.menu.opt.o3lto=Fastest (-O3) with LTO
+ZEROBASE_CORE.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+ZEROBASE_CORE.menu.opt.ogstd=Debug (-Og)
+ZEROBASE_CORE.menu.opt.ogstd.build.flags.optimize=-Og
+ZEROBASE_CORE.menu.opt.o0std=No Optimization (-O0)
+ZEROBASE_CORE.menu.opt.o0std.build.flags.optimize=-O0
+
+
+# Debug information
+ZEROBASE_CORE.menu.dbg.none=None
+ZEROBASE_CORE.menu.dbg.none.build.flags.debug=-DNDEBUG
+ZEROBASE_CORE.menu.dbg.enable_sym=Symbols Enabled (-g)
+ZEROBASE_CORE.menu.dbg.enable_sym.build.flags.debug=-g -DNDEBUG
+ZEROBASE_CORE.menu.dbg.enable_log=Core logs Enabled
+ZEROBASE_CORE.menu.dbg.enable_log.build.flags.debug=
+ZEROBASE_CORE.menu.dbg.enable_all=Core Logs and Symbols Enabled (-g)
+ZEROBASE_CORE.menu.dbg.enable_all.build.flags.debug=-g
+
+
+# C Runtime Library
+ZEROBASE_CORE.menu.rtlib.nano=Newlib Nano (default)
+ZEROBASE_CORE.menu.rtlib.nano.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs
+ZEROBASE_CORE.menu.rtlib.nanofp=Newlib Nano + Float Printf
+ZEROBASE_CORE.menu.rtlib.nanofp.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _printf_float
+ZEROBASE_CORE.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+ZEROBASE_CORE.menu.rtlib.nanofs.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _scanf_float
+ZEROBASE_CORE.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+ZEROBASE_CORE.menu.rtlib.nanofps.build.flags.ldflags=--specs=nano.specs --specs=nosys.specs -u _printf_float -u _scanf_float
+ZEROBASE_CORE.menu.rtlib.full=Newlib Standard
+ZEROBASE_CORE.menu.rtlib.full.build.flags.ldflags=--specs=nosys.specs
+
+# I2C Slave support
+ZEROBASE_CORE.menu.i2cslave.disabled=I2C Slave Disabled (saves ~1K flash)
+ZEROBASE_CORE.menu.i2cslave.disabled.build.flags.i2cslave=-DOPT_I2C_SLAVE=0
+ZEROBASE_CORE.menu.i2cslave.enabled=I2C Slave Enabled
+ZEROBASE_CORE.menu.i2cslave.enabled.build.flags.i2cslave=-DOPT_I2C_SLAVE=1
