@@ -34,7 +34,7 @@
   *
   * \param _pin
   */
-  extern void noTone(uint8_t _pin, bool destruct = false);
+  extern void noTone(uint8_t _pin, bool destruct = true);
 
 #endif
 

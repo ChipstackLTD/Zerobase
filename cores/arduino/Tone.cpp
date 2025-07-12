@@ -42,6 +42,7 @@ static HardwareTimer *TimerTone = NULL;
   * @param  htim : timer handle
   * @retval None
   */
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 static void tonePeriodElapsedCallback()
 {
   GPIO_TypeDef *port = get_GPIO_Port(CH_PORT(TimerTone_pinInfo.pin));
@@ -64,17 +65,24 @@ static void tonePeriodElapsedCallback()
   * @param  pin : pin number to toggle
   * @retval None
   */
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 static void timerTonePinDeinit()
 {
   if (TimerTone != NULL) {
     TimerTone->timerHandleDeinit();
   }
   if (TimerTone_pinInfo.pin != NC) {
-    pin_function(TimerTone_pinInfo.pin, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_FLOAT, NOPULL, AFIO_NONE));
+    // Ensure pin is LOW before changing to input mode
+    GPIO_TypeDef *port = get_GPIO_Port(CH_PORT(TimerTone_pinInfo.pin));
+    if (port != NULL) {
+      digital_io_write(port, CH_MAP_GPIO_PIN(TimerTone_pinInfo.pin), 0);
+    }
+    // pin_function(TimerTone_pinInfo.pin, CH_PIN_DATA(CH_MODE_INPUT, CH_CNF_INPUT_FLOAT, NOPULL, AFIO_NONE));
     TimerTone_pinInfo.pin = NC;
   }
 }
 
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 static void timerTonePinInit(PinName p, uint32_t frequency, uint32_t duration)
 {
   uint32_t timFreq = 2 * frequency;
@@ -102,7 +110,7 @@ static void timerTonePinInit(PinName p, uint32_t frequency, uint32_t duration)
     }
   }
 }
-
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 // frequency (in hertz) and duration (in milliseconds).
 void tone(uint8_t _pin, unsigned int frequency, unsigned long duration)
 {
@@ -118,7 +126,7 @@ void tone(uint8_t _pin, unsigned int frequency, unsigned long duration)
     }
   }
 }
-
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 void noTone(uint8_t _pin, bool destruct)
 {
   PinName p = digitalPinToPinName(_pin);
@@ -134,6 +142,7 @@ void noTone(uint8_t _pin, bool destruct)
 }
 #else
 #warning "TIMER_TONE or TIM_MODULE_ENABLED not defined"
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 void tone(uint8_t _pin, unsigned int frequency, unsigned long duration)
 {
   (void)(_pin);
@@ -141,6 +150,7 @@ void tone(uint8_t _pin, unsigned int frequency, unsigned long duration)
   (void)(duration);
 }
 
+__attribute__((used)) __attribute__((noinline)) __attribute__((externally_visible))
 void noTone(uint8_t _pin, bool destruct)
 {
   (void)(_pin);
