@@ -27,7 +27,7 @@ extern "C"
   __IO uint64_t msTick = 0;
   WEAK uint64_t GetTick(void)
   {
-    return msTick;
+      return (uint64_t)msTick;  // Cast to uint32_t
   }
 
   void osSystickHandler() __attribute__((weak, alias("noOsSystickHandler")));

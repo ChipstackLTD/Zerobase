@@ -40,6 +40,9 @@
 #include "utility/twi.h"
 #include "PinAF_ch32yyxx.h"
 
+// Add this after the #include statements
+extern uint64_t GetTick(void);  // Correct declaration
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -410,7 +413,7 @@ i2c_status_e i2c_master_write(i2c_t *obj, uint8_t dev_address,
 
 
   i2c_status_e  ret = I2C_OK;
-  uint32_t tickstart = GetTick();
+  uint64_t tickstart = GetTick();
   {
     I2C_AcknowledgeConfig( obj->handle.Instance, ENABLE ); 
     while(I2C_GetFlagStatus(obj->handle.Instance, I2C_FLAG_BUSY) != RESET)  //wait for busy
@@ -585,7 +588,7 @@ i2c_status_e i2c_slave_write(i2c_t *obj, uint8_t *data, uint16_t size)
 #if OPT_I2C_SLAVE
   uint8_t i = 0;
   i2c_status_e ret = I2C_OK;
-  uint32_t tickstart = GetTick();
+  uint64_t tickstart = GetTick();
 
   while(i<size)
   {
@@ -634,7 +637,7 @@ i2c_status_e i2c_slave_write(i2c_t *obj, uint8_t *data, uint16_t size)
 i2c_status_e i2c_master_read(i2c_t *obj, uint8_t dev_address, uint8_t *data, uint16_t size)
 {
   i2c_status_e ret = I2C_OK;
-  uint32_t tickstart = GetTick();
+  uint64_t tickstart = GetTick();
 
   I2C_GenerateSTART( obj->handle.Instance, ENABLE );
   while( !I2C_CheckEvent( obj->handle.Instance, I2C_EVENT_MASTER_MODE_SELECT ) )
@@ -687,7 +690,7 @@ i2c_status_e i2c_slave_read(i2c_t *obj, uint8_t *data, uint16_t size)
 #if OPT_I2C_SLAVE
   uint8_t i = 0;
   i2c_status_e ret = I2C_OK;
-  uint32_t tickstart = GetTick();
+  uint64_t tickstart = GetTick();
 
   while(i<size)
   {
