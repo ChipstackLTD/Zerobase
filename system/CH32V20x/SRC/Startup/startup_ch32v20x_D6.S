@@ -151,7 +151,7 @@ _vector_base:
     .weak   USBWakeUp_IRQHandler       /* USB Wakeup from suspend */
     .weak   USBHD_IRQHandler           /* USBHD */
     .weak   USBHDWakeUp_IRQHandler     /* USBHD Wake Up */
-    .weak   UART4_IRQHandler           /* UART4 */
+    .global   UART4_IRQHandler           /* UART4 */
     .weak   DMA1_Channel8_IRQHandler   /* DMA1 Channel8 */
 
 NMI_Handler:  1:  j 1b
@@ -187,7 +187,6 @@ RTCAlarm_IRQHandler:  1:  j 1b
 USBWakeUp_IRQHandler:  1:  j 1b
 USBHD_IRQHandler:  1:  j 1b
 USBHDWakeUp_IRQHandler:  1:  j 1b
-UART4_IRQHandler:  1:  j 1b
 DMA1_Channel8_IRQHandler:  1:  j 1b
 
 	.section	.text.handle_reset,"ax",@progbits
