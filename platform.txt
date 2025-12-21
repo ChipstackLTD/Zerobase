@@ -172,8 +172,8 @@ tools.WCH_linkE.upload.pattern="{path}{cmd}" -f "{upload.config}" -c init -c hal
 #tools.WCH_linkE.upload.pattern="{path}{cmd}" -f {upload.config} -c init -c halt -c "program {{build.path}/{build.project_name}.elf}; verify_image {{build.path}/{build.project_name}.elf}; wlink_reset_resume;  exit;"
 
 ## minichlink
-tools.minichlink.path={runtime.tools.minichlink-1.0.1.path}/
-tools.minichlink.path.windows={runtime.tools.minichlink-1.0.1.path}\
+tools.minichlink.path={runtime.tools.minichlink-1.0.1.path}/{runtime.os}/
+tools.minichlink.path.windows={runtime.tools.minichlink-1.0.1.path}\{runtime.os}\
 tools.minichlink.cmd=minichlink
 tools.minichlink.cmd.windows=minichlink.exe
 tools.minichlink.upload.pattern="{path}{cmd}" -w "{build.path}/{build.project_name}.bin" flash
@@ -183,8 +183,10 @@ tools.minichlink.erase.pattern=
 tools.minichlink.bootloader.pattern=
 
 ## WCH-ISP
-tools.wchisp.path={runtime.tools.wchisp.path}/wchisp-win-x64/
-tools.wchisp.cmd=wchisp.exe
+tools.wchisp.path={runtime.tools.wchisp.path}/
+tools.wchisp..windows={runtime.tools.wchisp.path}\
+tools.wchisp.cmd=wchisp
+tools.wchisp.cmd.windows=wchisp.exe
 tools.wchisp.upload.params.verbose=
 tools.wchisp.upload.params.quiet=
 tools.wchisp.upload.pattern="{path}{cmd}" {upload.verbose} flash "{build.path}/{build.project_name}.bin"
