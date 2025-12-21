@@ -1,7 +1,7 @@
 {
-    "description": "Core library for CH32duino",
-    "name": "framework-arduino-openwch-ch32",
+    "description": "Core library for Zerobase",
+    "name": "framework-arduino-zerobase",
     "system": "all",
-    "url": "https://github.com/openwch/arduino_core_ch32",
+    "url": "https://github.com/ChipstackLTD/Zerobase",
     "version": "0.0.0"
 }

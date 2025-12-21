@@ -1,4 +1,4 @@
-![Zerobase logo](https://github.com/user-attachments/assets/85707a5b-7c64-4cc3-b488-461d6257be5c)
+![Zerobase logo](https://cdn.chipstack.vn/zerobase/Zerobase%20logo.png)
 
 # Zerobase Arduino core
 
