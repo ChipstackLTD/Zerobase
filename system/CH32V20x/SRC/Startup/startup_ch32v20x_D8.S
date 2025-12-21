@@ -163,7 +163,7 @@ _vector_base:
     .weak   ETH_IRQHandler             /* ETH global */
     .weak   ETHWakeUp_IRQHandler       /* ETHWakeUp */
     .weak   TIM5_IRQHandler            /* TIM5 */
-    .weak   UART4_IRQHandler           /* UART4 */
+    .global   UART4_IRQHandler           /* UART4 */
     .weak   DMA1_Channel8_IRQHandler   /* DMA1 Channel8 */
     .weak   OSC32KCal_IRQHandler       /* OSC32 KCal */
     .weak   OSCWakeUp_IRQHandler       /* OSC Wake Up */
@@ -225,7 +225,6 @@ ETHWakeUp_IRQHandler:  1:  j 1b
 TIM5_IRQHandler:  1:  j 1b
 OSC32KCal_IRQHandler:  1:  j 1b
 OSCWakeUp_IRQHandler:  1:  j 1b
-UART4_IRQHandler:  1:  j 1b
 DMA1_Channel8_IRQHandler:  1:  j 1b
 
 	.section	.text.handle_reset,"ax",@progbits
