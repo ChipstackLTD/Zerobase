@@ -51,13 +51,13 @@ HardwareSerial::HardwareSerial(void *peripheral)
     setRx(PIN_SERIAL3_RX); // PB11 (Serial3 RX)
     setTx(PIN_SERIAL3_TX); // PB10 (Serial3 TX)
   }
-  #ifdef BOARD_ZEROBASE2W
+  //#ifdef BOARD_ZEROBASE2W
   else if (peripheral == UART4)
   {
     setRx(PIN_SERIAL4_RX); // PC11 (Serial4 RX)
     setTx(PIN_SERIAL4_TX); // PC10 (Serial4 TX)
   }
-  #endif
+  //#endif
 #endif
 
 #ifdef BOARD_ZEROBASE
