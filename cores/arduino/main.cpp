@@ -7,10 +7,10 @@
  * \brief Main entry point of Arduino application
  */
 
-uint32_t z1 = 0;
-uint32_t z2 = 0;
-#define ESP_RST_PIN 5    // RST pin connection
-#define ESP_GPIO0_PIN 4  // GPIO0 pin connection
+#ifdef BOARD_ZEROBASE2W
+    #define ESP_RST_PIN PA6    
+    #define ESP_GPIO0_PIN PA7
+#endif
 
 extern void setup(void) __attribute__((used));
 extern void loop(void) __attribute__((used));
@@ -24,7 +24,7 @@ int main(void)
         NVIC_SystemReset();
     SystemReset_StartMode(Start_Mode_BOOT);
     // pinMode(PD4, OUTPUT);
-      // Bật clock cho GPIOD (PDx)
+    // Bật clock cho GPIOD (PDx)
     RCC->APB2PCENR |= RCC_APB2Periph_GPIOD;
 
       // Xóa 4 bit cấu hình của pin PD4 (pin 12)
@@ -59,17 +59,17 @@ if ((uint16_t)(*(__IO uint16_t *)0x1FFFF806) != (uint16_t)(((~((c >> 8) & 0xFF) 
     *(volatile uint32_t*)0xE000E048 = 0xBEEF0000 | (1 << 7);
 }
 
-  pinMode(ESP_RST_PIN, OUTPUT);
-  pinMode(ESP_GPIO0_PIN, OUTPUT);
-  // Reset sequence for normal operation
-  digitalWrite(ESP_GPIO0_PIN, HIGH);  // Set GPIO0 high for normal boot
-  delay(100);
-
-  digitalWrite(ESP_RST_PIN, LOW);  // Assert reset
-  delay(100);                       // Hold in reset
-
-  digitalWrite(ESP_RST_PIN, HIGH);  // Release reset
-  delay(100);                        // Give ESP time to boot
+#ifdef BOARD_ZEROBASE2W
+    // Wifi reset
+    pinMode(ESP_RST_PIN, OUTPUT);
+    pinMode(ESP_GPIO0_PIN, OUTPUT);
+    digitalWrite(ESP_GPIO0_PIN, HIGH);
+    delay(100);
+    digitalWrite(ESP_RST_PIN, LOW);     
+    delay(3000);                         
+    digitalWrite(ESP_RST_PIN, HIGH);    
+    delay(3000); 
+#endif
 
   setup();
 
