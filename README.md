@@ -24,7 +24,7 @@ Please visit [Product Introduction Page](https://chipstack.vn/zerobase) for more
 
 ## Wiki
 
-Please visit [documentation page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial. 
+Please visit [Wiki Page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial. 
 
 ## Learning Zerobase at Chipstack Academy
 
