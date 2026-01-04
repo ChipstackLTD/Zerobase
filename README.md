@@ -32,7 +32,7 @@ Please visit [Wiki Page](https://zerobase.chipstack.vn) for documentation, quick
 
 [Chipstack Academy](https://academy.chipstack.vn) is free and an education platform from Chipstack to let end user learn how to use Chipstack products.
 
-## Buy Product
+## Buy Zerobase hardwares
 Enter [Chipstack Shop](https://chipstack.vn/product-category/zerobase/) to buy Zerobase hardwares.
 
 ## Submit bugs
