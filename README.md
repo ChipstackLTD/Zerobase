@@ -16,9 +16,19 @@ Key Features of Zerobase:
 
 **Seamless Compatibility**: Works effortlessly with existing Arduino projects, shields, and accessories. We are working hard to ensure you can use Zerobase seamlessly with the Arduino IDE. Our team is dedicated to creating a smooth and hassle-free experience for users transitioning to or starting with Zerobase. Whether you're a beginner or an experienced maker, we want to guarantee full compatibility and simplicity when working with the Arduino IDE.
 
-## Documentation
+![Zerobase Hardwares](https://cdn.chipstack.vn/zerobase-versions/zerobase-series-v2.png)
 
-Please visit [documentation page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial
+## Product Introduction
+
+Please visit [Product Introduction Page](https://chipstack.vn/zerobase) for more.
+
+## Wiki
+
+Please visit [documentation page](https://zerobase.chipstack.vn) for documentation, quick start, example and tutorial. 
+
+## Learning Zerobase at Chipstack Academy
+
+[Chipstack Academy](https://academy.chipstack.vn) is free and an education platform from Chipstack to let end user learn how to use Chipstack products.
 
 ## Submit bugs
 
