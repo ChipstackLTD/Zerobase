@@ -16,6 +16,8 @@ Key Features of Zerobase:
 
 **Seamless Compatibility**: Works effortlessly with existing Arduino projects, shields, and accessories. We are working hard to ensure you can use Zerobase seamlessly with the Arduino IDE. Our team is dedicated to creating a smooth and hassle-free experience for users transitioning to or starting with Zerobase. Whether you're a beginner or an experienced maker, we want to guarantee full compatibility and simplicity when working with the Arduino IDE.
 
+**IoT-Ready with Built-in WiFi**: **Zerobase 2W** features integrated **WiFi** capability powered by the **ESP8285** module, making it ideal for exploring and learning about IoT applications. Users can easily connect and experiment with IoT projects using **freemqtt.chipstack.vn**, a free MQTT broker provided by Chipstack.
+
 ![Zerobase Hardwares](https://cdn.chipstack.vn/zerobase-versions/zerobase-series-v2.png)
 
 ## Product Introduction
