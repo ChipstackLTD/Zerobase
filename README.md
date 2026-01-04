@@ -4,7 +4,7 @@
 
 ## What is Zerobase
 
-**Zerobase** is an innovative microcontroller board developed by **Chipstack Co., Ltd.**, designed to bring affordable yet powerful technology to the maker community. Inspired by the Arduino Nano, Zerobase offers enhanced performance, improved capabilities, and a price point that makes it the perfect entry-level choice for Arduino enthusiasts and learners on a budget.
+**Zerobase** is an innovative microcontroller board developed by [**Chipstack Co., Ltd.**](https://chipstack.vn), designed to bring affordable yet powerful technology to the maker community. Inspired by the Arduino Nano, Zerobase offers enhanced performance, improved capabilities, and a price point that makes it the perfect entry-level choice for Arduino enthusiasts and learners on a budget.
 
 Key Features of Zerobase:
 
@@ -31,6 +31,9 @@ Please visit [Wiki Page](https://zerobase.chipstack.vn) for documentation, quick
 ## Learning Zerobase at Chipstack Academy
 
 [Chipstack Academy](https://academy.chipstack.vn) is free and an education platform from Chipstack to let end user learn how to use Chipstack products.
+
+## Buy Product
+Enter [Chipstack Shop](https://chipstack.vn/product-category/zerobase/) to buy Zerobase hardwares.
 
 ## Submit bugs
 
