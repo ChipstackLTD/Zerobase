@@ -8,8 +8,8 @@
 #include <WiFiEspAT.h>
 #include <WiFiUdp.h>
 
-const char* ssid = "Quang Hung";
-const char* password = "quanghung68";
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 WiFiClient tcpClient;
 

@@ -19,8 +19,8 @@
 #include <WiFiEspAT.h>
 #include <WiFiUdp.h>
 
-const char* ssid = "Quang Hung";
-const char* password = "quanghung68";
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 WiFiClient client;
 WiFiUDP udp;
@@ -68,7 +68,7 @@ void setup() {
 
 void loop() {
   syncNTP();
-  delay(60000);         // 1 phút lấy 1 lần
+  delay(60000);         
 }
 
 void printWifiStatus() {

@@ -9,8 +9,8 @@
 #define WIFIESPAT2
 #include <WiFiEspAT.h>
 
-const char* ssid = "Quang Hung";
-const char* password = "quanghung68";
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 WiFiServer server(80);
 bool ledState = false;
@@ -19,7 +19,7 @@ void setup() {
   Serial.begin(9600);
   delay(2000);
 
-  pinMode(LED_BUILTIN, OUTPUT);  // Thiết lập LED của board làm đầu ra
+  pinMode(LED_BUILTIN, OUTPUT);  
   digitalWrite(LED_BUILTIN, LOW);
 
   Serial4.begin(115200);
@@ -61,12 +61,11 @@ void loop() {
   WiFiClient client = server.available();
   if(!client) return;
 
-  //Serial.println("Client connected");
   String req = "";
   unsigned long tStart = millis();
   while(client.connected() && millis() - tStart < 500) {
     if(client.available()) {
-      char c = client.read();  // đọc hết header
+      char c = client.read();  
       req += c;
     }
   }
@@ -87,7 +86,6 @@ void loop() {
     digitalWrite(LED_BUILTIN, LOW);
   }
 
-  // Gửi HTML với Bootstrap 5
   client.println("HTTP/1.1 200 OK");
   client.println("Content-Type: text/html");
   client.println("Connection: close");
@@ -102,7 +100,6 @@ void loop() {
   client.println("</head>");
   client.println("<body class='container text-center mt-5'>");
 
-  // Thêm logo SVG ở top
   client.println("<div class='mb-4'>");
   client.println("<img src='https://cdn.chipstack.vn/chipstack/chipstack-logo-2.svg' alt='ChipStack Logo' style='height:80px;'>");
   client.println("</div>");
@@ -110,7 +107,6 @@ void loop() {
   client.println("<h1>Zerobase 2W on-board LED control</h1>");
   client.println("<p>LED is currently: <strong>" + String(ledState ? "ON" : "OFF") + "</strong></p>");
 
-  // Nút bật/tắt
   client.println("<a href='/?led=on' class='btn btn-success btn-lg m-2'>Turn ON</a>");
   client.println("<a href='/?led=off' class='btn btn-danger btn-lg m-2'>Turn OFF</a>");
 
@@ -119,8 +115,6 @@ void loop() {
   client.flush();
   delay(50);
   client.stop();
-
-  //Serial.println("Client disconnected");
 }
 
 void printWifiStatus() {

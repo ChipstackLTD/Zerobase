@@ -12,22 +12,18 @@
 #define WIFIESPAT_LOG_LEVEL LOG_LEVEL_DEBUG
 #define LOG_OUTPUT Serial
 
-/* ===== WIFI ===== */
-const char* ssid     = "Quang Hung";
-const char* password = "quanghung68";
+const char* ssid     = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
-/* ===== MQTT ===== */
 const char* mqttServer = "freemqtt.chipstack.vn";
 const int   mqttPort   = 1883;
 const char* mqttTopic  = "/topic/mytopic01";
 
-/* ===== OBJECT ===== */
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 unsigned long lastSend = 0;
 
-/* ===== SETUP ===== */
 void setup() {
   Serial.begin(9600);
   delay(2000);
@@ -63,7 +59,6 @@ void setup() {
 
   printWifiStatus();
 
-  /* MQTT CONFIG */
   mqttClient.setServer(mqttServer, mqttPort);
   mqttClient.setSocketTimeout(15);
   mqttClient.setKeepAlive(30);
@@ -81,14 +76,12 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   Serial.println();
 }
 
-/* ===== MQTT RECONNECT ===== */
 void reconnectMQTT() {
   while (!mqttClient.connected()) {
     Serial.print("Connecting MQTT...");
     if (mqttClient.connect("")) {
       Serial.println("OK");
       
-      // Subscribe topic sau khi connect
       if (mqttClient.subscribe("/topic/mytopic2")) {
         Serial.println("Subscribed to /topic/mytopic2");
       } else {
@@ -102,7 +95,6 @@ void reconnectMQTT() {
   }
 }
 
-/* ===== LOOP ===== */
 void loop() {
   if (!mqttClient.connected()) {
     reconnectMQTT();
@@ -116,7 +108,6 @@ void loop() {
   }
 }
 
-/* ===== WIFI STATUS ===== */
 void printWifiStatus() {
   Serial.print("SSID: ");
   Serial.println(WiFi.SSID());

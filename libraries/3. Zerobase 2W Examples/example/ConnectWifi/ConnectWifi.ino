@@ -6,8 +6,8 @@
 #define WIFIESPAT2
 #include <WiFiEspAT.h>
 
-const char* ssid = "Quang Hung";
-const char* password = "quanghung68";
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 void setup() {
   Serial.begin(9600);
