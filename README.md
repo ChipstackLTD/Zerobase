@@ -40,4 +40,7 @@ Enter [Chipstack Shop](https://chipstack.vn/product-category/zerobase/) to buy Z
 If you have any questions, you could contact us through the email "*support@chipstack.vn*".
 Or you could [file an issue on GitHub](https://github.com/ChipstackLTD/Zerobase/issues/new).
 
+## Give us a star :star:
+
+If you find the project interesting, feel free to leave a star :smile:
 
